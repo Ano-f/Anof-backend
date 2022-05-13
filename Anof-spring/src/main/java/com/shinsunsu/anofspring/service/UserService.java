@@ -44,4 +44,17 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         return null;
     }
+
+    //유저 로그인 아이디 중복 체크
+    @Transactional(readOnly = true)
+    public boolean checkLoginIdDuplicate(String userId) {
+        return userRepository.existsByUserId(userId);
+    }
+
+    //유저 로그인 아이디 중복 체크
+    @Transactional(readOnly = true)
+    public boolean checkNicknameDuplicate(String userId) {
+        return userRepository.existsByUserId(userId);
+    }
+
 }
