@@ -36,16 +36,13 @@ public class UserController {
 
     //회원가입
     //사용자 아이디, 패스워드, 닉네임, 알러지, 성분 받아서 엔티티에 저장
-    //return은
+    //return은 ResponseEntity로 상태코드까지 전달
     @PostMapping("/join")
-    public Map<String, Object> join(@RequestBody Map<String,Object> paramMap) {
-        System.out.println(paramMap.size());
-        for(int i=0;i<paramMap.size();i++){
-            //Map<String, String> res = (Map<String, String>) paramMap.get("username");       //json안에 리스트는 이걸로 받고
+    public ResponseEntity<Boolean> join(@RequestBody Map<String,Object> paramMap) {
+        String userId=(String) paramMap.get("userId");  //이런식으로 하면됨
+        //Map<String, String> res = (Map<String, String>) paramMap.get("username");       //json안에 리스트는 이걸로 받고
+        //System.out.println(res.get("1"));
 
-            //System.out.println(res.get("1"));
-
-        }
         System.out.println(paramMap.get("userId"));   //그냥 키밸류는 이렇게 받고
         return null;
     }
