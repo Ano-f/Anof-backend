@@ -3,24 +3,28 @@ package com.shinsunsu.anofspring.service;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
-
+    @Autowired
+    private UserRepository userRepository;
 
     //회원가입
     @Transactional
     public User join(User newUser) {
+
         return userRepository.save(newUser);
     }
 

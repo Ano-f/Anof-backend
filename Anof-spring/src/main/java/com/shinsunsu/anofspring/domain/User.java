@@ -38,6 +38,14 @@ public class User implements UserDetails {
     @Column(length = 300)
     private String accessToken;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="allergyId")
+    private Allergy allergy;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="IngredientId")
+    private Ingredient ingredient;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
