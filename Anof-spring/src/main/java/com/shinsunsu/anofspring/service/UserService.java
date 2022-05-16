@@ -55,10 +55,9 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByUserId(userId);
     }
 
-    //유저 로그인 아이디 중복 체크
+    //유저 로그인 닉네임 중복 체크
     @Transactional(readOnly = true)
     public boolean checkNicknameDuplicate(String userId) {
-        return userRepository.existsByUserId(userId);
+        return userRepository.existsByNickname(userId);
     }
-
 }

@@ -23,8 +23,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
 
     //회원가입
@@ -47,73 +46,49 @@ public class UserController {
     //return은 ResponseEntity로 상태코드까지 전달
     @PostMapping("/join")
     public ResponseEntity<Boolean> join(@RequestBody Map<String,Object> paramMap) {
-        String userId=(String) paramMap.get("userId");  //이런식으로 하면됨
+        String userId=(String) paramMap.get("id");//이런식으로 하면됨
         String nickname = (String) paramMap.get("nickname");
-        String rawPassword = (String) paramMap.get("password");
-        String password = encoder.encode(rawPassword); //비밀번호 암호화
+        String password = encoder.encode((String)paramMap.get("password")); //비밀번호 암호화
 
         User user = new User();
         user.setUserId(userId);
         user.setPassword(password);
         user.setNickname(nickname);
+        user.setRoles(Collections.singletonList("ROLE_USER")); //회원가입 시 role 유저로 설정
 
         Map<String, Integer> ingredient = (Map<String, Integer>) paramMap.get("ingredient");
-        int natrium = ingredient.get("natrium");
-        int carbohydrates = ingredient.get("carbohydrates");
-        int sugar = ingredient.get("sugar");
-        int fat = ingredient.get("fat");
-        int trans_fat = ingredient.get("trans_fat");
-        int saturated_fat = ingredient.get("saturated_fat");
-        int cholesterol = ingredient.get("cholesterol");
-        int protein = ingredient.get("protein");
 
         Ingredient userIngredient = new Ingredient();
-        userIngredient.setNatrium(natrium);
-        userIngredient.setCarbohydrates(carbohydrates);
-        userIngredient.setCarbohydrates(sugar);
-        userIngredient.setCarbohydrates(fat);
-        userIngredient.setCarbohydrates(trans_fat);
-        userIngredient.setCarbohydrates(saturated_fat);
-        userIngredient.setCarbohydrates(cholesterol);
-        userIngredient.setCarbohydrates(protein);
+        userIngredient.setNatrium(ingredient.get("natrium"));
+        userIngredient.setCarbohydrates(ingredient.get("carbohydrates"));
+        userIngredient.setCarbohydrates(ingredient.get("sugar"));
+        userIngredient.setCarbohydrates(ingredient.get("fat"));
+        userIngredient.setCarbohydrates(ingredient.get("trans_fat"));
+        userIngredient.setCarbohydrates(ingredient.get("saturated_fat"));
+        userIngredient.setCarbohydrates(ingredient.get("cholesterol"));
+        userIngredient.setCarbohydrates(ingredient.get("protein"));
 
         user.setIngredient(userIngredient); //성분 유저에 넣어줌
 
         Map<String, Integer> allergy = (Map<String, Integer>) paramMap.get("allergy");
-        int wheat = allergy.get("wheat");
-        int milk = allergy.get("milk");
-        int buckwheat = allergy.get("buckwheat");
-        int peanut = allergy.get("peanut");
-        int soybean = allergy.get("soybean");
-        int mackerel = allergy.get("mackerel");
-        int crab = allergy.get("crab");
-        int shrimp = allergy.get("shrimp");
-        int pork = allergy.get("pork");
-        int peach = allergy.get("peach");
-        int tomato = allergy.get("tomato");
-        int walnut = allergy.get("walnut");
-        int chicken = allergy.get("chicken");
-        int beef = allergy.get("beef");
-        int squid = allergy.get("squid");
-        int shellfish = allergy.get("shellfish");
 
         Allergy userAllergy = new Allergy();
-        userAllergy.setWheat(wheat);
-        userAllergy.setMilk(milk);
-        userAllergy.setBuckwheat(buckwheat);
-        userAllergy.setPeanut(peanut);
-        userAllergy.setSoybean(soybean);
-        userAllergy.setMackerel(mackerel);
-        userAllergy.setCrab(crab);
-        userAllergy.setShrimp(shrimp);
-        userAllergy.setPork(pork);
-        userAllergy.setPeach(peach);
-        userAllergy.setTomato(tomato);
-        userAllergy.setWalnut(walnut);
-        userAllergy.setChicken(chicken);
-        userAllergy.setBeef(beef);
-        userAllergy.setSquid(squid);
-        userAllergy.setShellfish(shellfish);
+        userAllergy.setWheat(allergy.get("wheat"));
+        userAllergy.setMilk(allergy.get("milk"));
+        userAllergy.setBuckwheat(allergy.get("buckwheat"));
+        userAllergy.setPeanut(allergy.get("peanut"));
+        userAllergy.setSoybean(allergy.get("soybean"));
+        userAllergy.setMackerel(allergy.get("mackerel"));
+        userAllergy.setCrab(allergy.get("crab"));
+        userAllergy.setShrimp(allergy.get("shrimp"));
+        userAllergy.setPork(allergy.get("pork"));
+        userAllergy.setPeach(allergy.get("peach"));
+        userAllergy.setTomato(allergy.get("tomato"));
+        userAllergy.setWalnut(allergy.get("walnut"));
+        userAllergy.setChicken(allergy.get("chicken"));
+        userAllergy.setBeef(allergy.get("beef"));
+        userAllergy.setSquid(allergy.get("squid"));
+        userAllergy.setShellfish(allergy.get("shellfish"));
 
         user.setAllergy(userAllergy); //알러지 유저에 넣어줌
 
@@ -121,7 +96,7 @@ public class UserController {
         //Map<String, String> res = (Map<String, String>) paramMap.get("username");       //json안에 리스트는 이걸로 받고
         //System.out.println(res.get("1"));
 
-        System.out.println(paramMap.get("userId"));   //그냥 키밸류는 이렇게 받고
+        System.out.println("join");   //그냥 키밸류는 이렇게 받고
         return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
     }
 
