@@ -43,10 +43,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    //유저아이디로 유저정보 조회
+    //아이디로 유저 정보 조회
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        return null;
+    public User loadUserByUsername(String userId) throws UsernameNotFoundException {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("가입되지 않은 아이디입니다"));
     }
 
     //유저 로그인 아이디 중복 체크
