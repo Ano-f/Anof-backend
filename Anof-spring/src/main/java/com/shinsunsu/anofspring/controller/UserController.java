@@ -83,6 +83,10 @@ public class UserController {
 
         System.out.println("join");   //그냥 키밸류는 이렇게 받고
         return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
+        System.out.println("login");   //그냥 키밸류는 이렇게 받고
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
+        System.out.println(paramMap.get("userId"));   //그냥 키밸류는 이렇게 받고
+        return null;
     }
 
 
