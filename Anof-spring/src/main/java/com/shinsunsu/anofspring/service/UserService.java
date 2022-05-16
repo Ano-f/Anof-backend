@@ -3,24 +3,28 @@ package com.shinsunsu.anofspring.service;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
-
+    @Autowired
+    private UserRepository userRepository;
 
     //회원가입
     @Transactional
     public User join(User newUser) {
+
         return userRepository.save(newUser);
     }
 
@@ -51,10 +55,9 @@ public class UserService implements UserDetailsService {
         return userRepository.existsByUserId(userId);
     }
 
-    //유저 로그인 아이디 중복 체크
+    //유저 로그인 닉네임 중복 체크
     @Transactional(readOnly = true)
     public boolean checkNicknameDuplicate(String userId) {
-        return userRepository.existsByUserId(userId);
+        return userRepository.existsByNickname(userId);
     }
-
 }
