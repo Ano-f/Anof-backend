@@ -49,9 +49,8 @@ public class User implements UserDetails {
                 .collect(Collectors.toList());
     }
 
-    //이건 뭐지
     @Override
-    public String getUsername() { return null;  }
+    public String getUsername() { return userId;  }
 
     @Override
     public boolean isAccountNonExpired() {

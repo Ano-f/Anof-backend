@@ -1,15 +1,18 @@
 package com.shinsunsu.anofspring.controller;
 
+import com.shinsunsu.anofspring.config.JwtTokenProvider;
 import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.exception.user.PasswordErrorException;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -18,21 +21,8 @@ import java.util.Map;
 public class UserController {
 
     UserService userService;
-
-    //회원가입
-    /*
-    @PostMapping("/join")
-    public @ResponseBody JSONArray join(HttpServletRequest request) {
-        System.out.println("접속");
-        User newUser =new User();
-        newUser.setUserId(request.getParameter("userId"));
-        newUser.setPassword(request.getParameter("password"));
-        System.out.println(request.getParameter("userId"));
-        System.out.println(request.getParameter("password"));
-        return null;
-    }
-
-     */
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     //회원가입
     //사용자 아이디, 패스워드, 닉네임, 알러지, 성분 받아서 엔티티에 저장
@@ -51,6 +41,8 @@ public class UserController {
     //유저 로그인 아이디 중복 체크
     @PostMapping("/checkUserId")
     public Boolean checkUserIdDuplicate(@RequestBody Map<String,String> paramMap) {
+        //String userId= (String) paramMap.get("!!!!");
+        System.out.println("11111111");
         String userId= (String) paramMap.get("userId");
         System.out.println(userId);
         return userService.checkLoginIdDuplicate(userId);
@@ -66,6 +58,25 @@ public class UserController {
         return userService.checkNicknameDuplicate(nickname);
         //return true -> 존재하는 닉네임 -> 회원가입 불가능
         //retrun fasle ->  사용 가능한 닉네임
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody Map<String, String> user) {
+        System.out.println(user.get("userId"));
+        User loginUser = userService.loadUserByUsername(user.get("userId"));
+        if (!passwordEncoder.matches(user.get("password"), loginUser.getPassword())) {
+            throw new PasswordErrorException("잘못된 비밀번호입니다.");
+        }
+
+        //토큰 생성 및 저장
+        String token = jwtTokenProvider.createToken(loginUser.getUsername(), loginUser.getRoles()); //getUsername -> 유저 아이디 반환
+        userService.updateToken(loginUser.getId(), token);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("token", token);
+        map.put("nickname",loginUser.getNickname    ());
+        map.put("userId",loginUser.getUserId());
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
 }
