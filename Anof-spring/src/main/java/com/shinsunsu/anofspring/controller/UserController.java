@@ -33,6 +33,8 @@ public class UserController {
         //Map<String, String> res = (Map<String, String>) paramMap.get("username");       //json안에 리스트는 이걸로 받고
         //System.out.println(res.get("1"));
 
+        System.out.println("login");   //그냥 키밸류는 이렇게 받고
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
         System.out.println(paramMap.get("userId"));   //그냥 키밸류는 이렇게 받고
         return null;
     }
