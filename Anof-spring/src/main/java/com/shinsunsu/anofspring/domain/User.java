@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,10 +34,19 @@ public class User implements UserDetails {
     private String nickname;
 
     @Column(length = 100, nullable = false)
+    @ColumnDefault("0")
     private int point;
 
     @Column(length = 300)
     private String accessToken;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="allergyId")
+    private Allergy allergy;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="IngredientId")
+    private Ingredient ingredient;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
