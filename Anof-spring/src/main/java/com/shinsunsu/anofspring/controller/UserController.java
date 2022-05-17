@@ -25,22 +25,6 @@ public class UserController {
     private UserService userService;
     private final PasswordEncoder encoder;
 
-
-    //회원가입
-    /*
-    @PostMapping("/join")
-    public @ResponseBody JSONArray join(HttpServletRequest request) {
-        System.out.println("접속");
-        User newUser =new User();
-        newUser.setUserId(request.getParameter("userId"));
-        newUser.setPassword(request.getParameter("password"));
-        System.out.println(request.getParameter("userId"));
-        System.out.println(request.getParameter("password"));
-        return null;
-    }
-
-     */
-
     //회원가입
     //사용자 아이디, 패스워드, 닉네임, 알러지, 성분 받아서 엔티티에 저장
     //return은 ResponseEntity로 상태코드까지 전달
@@ -91,12 +75,8 @@ public class UserController {
         userAllergy.setShellfish(allergy.get("shellfish"));
 
         user.setAllergy(userAllergy); //알러지 유저에 넣어줌
-
         userService.join(user);
-        //Map<String, String> res = (Map<String, String>) paramMap.get("username");       //json안에 리스트는 이걸로 받고
-        //System.out.println(res.get("1"));
 
-        System.out.println("login");   //그냥 키밸류는 이렇게 받고
         return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
     }
 
