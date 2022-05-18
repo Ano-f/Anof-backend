@@ -31,7 +31,6 @@ public class UserController {
     public ResponseEntity<Boolean> join(@RequestBody Map<String,Object> newUser) {
 
         userService.join(newUser);
-        System.out.println("join");
         return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
     }
 
