@@ -44,4 +44,8 @@ public class Ingredient {
     @Column(nullable = false)
     @ColumnDefault("0")
     private int protein;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int calorie;
 }

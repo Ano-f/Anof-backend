@@ -48,12 +48,14 @@ public class UserService implements UserDetailsService {
         Ingredient userIngredient = new Ingredient();
         userIngredient.setNatrium(ingredient.get("natrium"));
         userIngredient.setCarbohydrates(ingredient.get("carbohydrates"));
-        userIngredient.setCarbohydrates(ingredient.get("sugar"));
-        userIngredient.setCarbohydrates(ingredient.get("fat"));
-        userIngredient.setCarbohydrates(ingredient.get("trans_fat"));
-        userIngredient.setCarbohydrates(ingredient.get("saturated_fat"));
-        userIngredient.setCarbohydrates(ingredient.get("cholesterol"));
-        userIngredient.setCarbohydrates(ingredient.get("protein"));
+        userIngredient.setSugar(ingredient.get("sugar"));
+        userIngredient.setFat(ingredient.get("fat"));
+        userIngredient.setTrans_fat(ingredient.get("trans_fat"));
+        userIngredient.setSaturated_fat(ingredient.get("saturated_fat"));
+        userIngredient.setCholesterol(ingredient.get("cholesterol"));
+        userIngredient.setProtein(ingredient.get("protein"));
+        userIngredient.setCalorie(ingredient.get("calorie"));
+
 
         newUser.setIngredient(userIngredient); //성분 유저에 넣어줌
 
@@ -76,6 +78,7 @@ public class UserService implements UserDetailsService {
         userAllergy.setBeef(allergy.get("beef"));
         userAllergy.setSquid(allergy.get("squid"));
         userAllergy.setShellfish(allergy.get("shellfish"));
+        userAllergy.setEgg((allergy.get("egg")));
 
         newUser.setAllergy(userAllergy); //알러지 유저에 넣어줌
         return userRepository.save(newUser);
