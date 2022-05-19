@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
         userIngredient.setSaturated_fat(ingredient.get("saturated_fat"));
         userIngredient.setCholesterol(ingredient.get("cholesterol"));
         userIngredient.setProtein(ingredient.get("protein"));
-        userIngredient.setCalorie(ingredient.get("calorie"));
+        userIngredient.setCalorie(ingredient.get("calroie"));
 
 
         newUser.setIngredient(userIngredient); //성분 유저에 넣어줌
@@ -100,6 +100,7 @@ public class UserService implements UserDetailsService {
     }
 
     //아이디로 유저 정보 조회
+    @Transactional(readOnly = true)
     @Override
     public User loadUserByUsername(String userId) throws UsernameNotFoundException {
         return userRepository.findByUserId(userId)
