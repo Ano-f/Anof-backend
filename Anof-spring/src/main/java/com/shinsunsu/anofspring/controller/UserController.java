@@ -1,6 +1,7 @@
 package com.shinsunsu.anofspring.controller;
 
 import com.shinsunsu.anofspring.config.JwtTokenProvider;
+import com.shinsunsu.anofspring.config.PasswordEncoderConfig;
 import com.shinsunsu.anofspring.domain.Allergy;
 import com.shinsunsu.anofspring.domain.Ingredient;
 import com.shinsunsu.anofspring.domain.User;
@@ -76,5 +77,4 @@ public class UserController {
         map.put("userId",loginUser.getUserId());
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
-
 }
