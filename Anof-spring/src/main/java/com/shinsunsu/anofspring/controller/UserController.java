@@ -1,6 +1,7 @@
 package com.shinsunsu.anofspring.controller;
 
 import com.shinsunsu.anofspring.config.JwtTokenProvider;
+import com.shinsunsu.anofspring.config.PasswordEncoderConfig;
 import com.shinsunsu.anofspring.domain.Allergy;
 import com.shinsunsu.anofspring.domain.Ingredient;
 import com.shinsunsu.anofspring.domain.User;
@@ -34,7 +35,6 @@ public class UserController {
     public ResponseEntity<Boolean> join(@RequestBody Map<String,Object> newUser) {
 
         userService.join(newUser);
-        System.out.println("join");
         return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
     }
 
@@ -77,5 +77,4 @@ public class UserController {
         map.put("userId",loginUser.getUserId());
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
-
 }
