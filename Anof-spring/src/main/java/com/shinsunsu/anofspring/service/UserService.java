@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
         userIngredient.setSaturated_fat(ingredient.get("saturated_fat"));
         userIngredient.setCholesterol(ingredient.get("cholesterol"));
         userIngredient.setProtein(ingredient.get("protein"));
-        userIngredient.setCalorie(ingredient.get("calroie"));
+        userIngredient.setCalorie(ingredient.get("calorie"));
 
 
         newUser.setIngredient(userIngredient); //성분 유저에 넣어줌
