@@ -138,10 +138,6 @@ public class Product {
     @ColumnDefault("0")
     private int egg;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private int sulfurous_acid;
-
     @Column(nullable = false, length = 5000)
     private String image;
 
