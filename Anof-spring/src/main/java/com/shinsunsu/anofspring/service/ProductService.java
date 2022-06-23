@@ -1,12 +1,15 @@
 package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.Product;
+import com.shinsunsu.anofspring.dto.SearchProductDto;
 import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -40,4 +43,8 @@ public class ProductService {
                 });
     }
 
+    @Transactional(readOnly = true) //상품명 검색 -> 상품 리스트 제공
+    public List<SearchProductDto> search(String keyword) {
+        return productRepository.search(keyword);
+    }
 }

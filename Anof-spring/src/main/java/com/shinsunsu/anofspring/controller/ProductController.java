@@ -42,4 +42,13 @@ public class ProductController {
         String product = mapper.writeValueAsString(productService.detailProductByName(productName));
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
+
+    @PostMapping("/search") //상품명 검색 -> 상품 리스트 제공
+    public ResponseEntity<Object> search(@RequestBody Map<String, String> keyword) {
+        String productKeyword = keyword.get("keyword");
+        //if(productKeyword.isEmpty()||productKeyword.equals(" ")) return null;
+
+        return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
+    }
+
 }
