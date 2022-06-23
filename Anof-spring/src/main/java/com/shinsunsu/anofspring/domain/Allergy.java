@@ -81,4 +81,7 @@ public class Allergy {
     @ColumnDefault("0")
     private int egg;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int sulfurous_acid;
 }

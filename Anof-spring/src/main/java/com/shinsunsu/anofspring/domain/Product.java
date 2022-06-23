@@ -30,45 +30,117 @@ public class Product {
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int natrium;
+    private String natrium;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int carbohydrates;
+    private String carbohydrates;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int sugar;
+    private String sugar;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int fat;
+    private String fat;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int trans_fat;
+    private String trans_fat;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int saturated_fat;
+    private String saturated_fat;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int cholesterol;
+    private String cholesterol;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int protein;
+    private String protein;
 
     @Column(nullable = false)
     @ColumnDefault("0")
-    private int calorie;
+    private String calorie;
 
     @Column(nullable = false, length = 50)
     private String capacity;
 
     @Column(nullable = false, length = 5000)
     private String allergy;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int wheat;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int milk;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int buckwheat;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int peanut;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int soybean;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int mackerel;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int crab;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int shrimp;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int pork;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int peach;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int tomato;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int walnut;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int chicken;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int beef;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int squid;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int shellfish;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int egg;
+
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private int sulfurous_acid;
 
     @Column(nullable = false, length = 5000)
     private String image;
