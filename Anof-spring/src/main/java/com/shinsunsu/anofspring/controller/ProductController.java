@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -21,8 +22,6 @@ public class ProductController {
 
     @PostMapping("/detail/barcode") //바코드 인식을 통한 식품 상세 조회
     public ResponseEntity<Object> detailProductByBarcode(@RequestBody Map<String, String> barcode) throws JsonProcessingException {
-        //Product product = productService.detailProduct(barcode);
-        //Map<String, String> map = new HashMap<>();
         String barcodeNumber = barcode.get("barcode");
         if(!productService.checkBarcodeExist(barcodeNumber)) { //인식한 바코드 식품 db에 존재하지 않을 경우
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
@@ -33,7 +32,7 @@ public class ProductController {
     }
 
     @PostMapping("/detail/name") //식품명 검색을 통한 식품 상세 조회
-    public ResponseEntity<Object> detailProductByName(@RequestBody Map<String, String> name) throws JsonProcessingException {
+    public ResponseEntity<Object> detailProductByName(@RequestBody Map<String, String> name, Principal principal) throws JsonProcessingException {
         String productName = name.get("name");
         if(!productService.checkNameExist(productName)) {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
@@ -46,7 +45,6 @@ public class ProductController {
     @PostMapping("/search") //상품명 검색 -> 상품 리스트 제공
     public ResponseEntity<Object> search(@RequestBody Map<String, String> keyword) {
         String productKeyword = keyword.get("keyword");
-        //if(productKeyword.isEmpty()||productKeyword.equals(" ")) return null;
 
         return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
     }

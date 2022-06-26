@@ -5,6 +5,7 @@ import com.shinsunsu.anofspring.config.PasswordEncoderConfig;
 import com.shinsunsu.anofspring.domain.Allergy;
 import com.shinsunsu.anofspring.domain.Ingredient;
 import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.dto.request.UserRequest;
 import com.shinsunsu.anofspring.exception.user.PasswordErrorException;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -32,12 +33,10 @@ public class UserController {
 
     //회원가입
     @PostMapping("/join")
-    public ResponseEntity<Boolean> join(@RequestBody Map<String,Object> newUser) {
-
-        userService.join(newUser);
-        return new ResponseEntity<Boolean>(true, HttpStatus.OK); //회원가입 완료 -> true
+    public ResponseEntity<Object> join(@RequestBody UserRequest user) {
+        User newUser = userService.join(UserRequest.newUser(user, passwordEncoder.encode(user.getPassword()),user.getAllergy(), user.getIngredient()));
+        return new ResponseEntity<>(newUser, HttpStatus.OK);
     }
-
 
     //유저 로그인 아이디 중복 체크
     @PostMapping("/checkUserId")
