@@ -58,10 +58,10 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody Map<String, String> user) {
-        User loginUser = userService.loadUserByUsername(user.get("userId"));
+    public ResponseEntity<Object> login(@RequestBody UserRequest user) {
+        User loginUser = userService.loadUserByUsername(user.getUserId());
 
-        if (!passwordEncoder.matches(user.get("password"), loginUser.getPassword())) {
+        if (!passwordEncoder.matches(user.getPassword(), loginUser.getPassword())) {
             System.out.println("111");
             throw new PasswordErrorException("잘못된 비밀번호입니다.");
         }
