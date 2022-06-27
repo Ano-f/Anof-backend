@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -66,9 +67,6 @@ public class Product {
 
     @Column(nullable = false, length = 50)
     private String capacity;
-
-    @Column(nullable = false, length = 5000)
-    private String allergy;
 
     @Column(nullable = false)
     @ColumnDefault("0")
@@ -143,4 +141,5 @@ public class Product {
 
     @Column(nullable = false, length = 100)
     private String barcode;
+
 }
