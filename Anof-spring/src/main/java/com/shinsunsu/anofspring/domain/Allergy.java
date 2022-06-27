@@ -80,5 +80,4 @@ public class Allergy {
     @Column(nullable = false)
     @ColumnDefault("0")
     private int egg;
-
 }

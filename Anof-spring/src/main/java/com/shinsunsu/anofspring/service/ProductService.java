@@ -1,9 +1,11 @@
 package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.Product;
+
 import com.shinsunsu.anofspring.dto.SearchProductDto;
 import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.ProductRepository;
+import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
 @RequiredArgsConstructor
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional(readOnly = true) //인식한 바코드 식품이 식품 db에 있는지 확인
     public boolean checkBarcodeExist(String barcode) {
@@ -47,4 +52,5 @@ public class ProductService {
     public List<SearchProductDto> search(String keyword) {
         return productRepository.search(keyword);
     }
+
 }
