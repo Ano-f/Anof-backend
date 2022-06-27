@@ -2,7 +2,9 @@ package com.shinsunsu.anofspring.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.service.ProductService;
+import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +19,11 @@ import java.util.Map;
 @RequestMapping("/product")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    @Autowired private ProductService productService;
+    @Autowired private UserService userService;
 
+
+    //get으로 변경 예정
     @PostMapping("/detail/barcode") //바코드 인식을 통한 식품 상세 조회
     public ResponseEntity<Object> detailProductByBarcode(@RequestBody Map<String, String> barcode) throws JsonProcessingException {
       
@@ -33,8 +37,10 @@ public class ProductController {
 
     }
 
+    //get으로 변경 예정
     @PostMapping("/detail/name") //식품명 검색을 통한 식품 상세 조회
     public ResponseEntity<Object> detailProductByName(@RequestBody Map<String, String> name, Principal principal) throws JsonProcessingException {
+        System.out.println(principal.getName());
         String productName = name.get("name");
         if(!productService.checkNameExist(productName)) {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
@@ -52,5 +58,5 @@ public class ProductController {
 
         return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
     }
-
+    
 }

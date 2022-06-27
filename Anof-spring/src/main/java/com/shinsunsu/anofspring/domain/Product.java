@@ -136,7 +136,7 @@ public class Product {
     @ColumnDefault("0")
     private int egg;
 
-    @Column(nullable = false, length = 5000)
+    @Column(length = 5000)
     private String image;
 
     @Column(nullable = false, length = 100)
