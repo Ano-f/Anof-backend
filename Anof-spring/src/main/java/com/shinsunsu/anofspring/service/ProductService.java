@@ -1,7 +1,7 @@
 package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.Product;
-import com.shinsunsu.anofspring.domain.User;
+
 import com.shinsunsu.anofspring.dto.SearchProductDto;
 import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.ProductRepository;
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
 
 @RequiredArgsConstructor
 @Service

@@ -15,6 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByName(String name);
     Optional<Product> findByBarcode(String barcode);
     Optional<Product> findByName(String name);
+
     @Query("select new com.shinsunsu.anofspring.dto.SearchProductDto(p.name, p.brand, p.image) from Product p where p.name like %:keyword%")
     List<SearchProductDto> search(@Param("keyword") String keyword);
 
