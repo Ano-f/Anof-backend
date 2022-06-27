@@ -26,7 +26,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-
     //회원가입
     @Transactional
     public User join(User newUser){
@@ -52,7 +51,7 @@ public class UserService implements UserDetailsService {
     @Override
     public User loadUserByUsername(String userId) throws UsernameNotFoundException {
         return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("가입되지 않은 아이디입니다"));
+                .orElseThrow(() -> new UsernameNotFoundException("회원가입이 필요합니다."));
     }
 
     //유저 로그인 아이디 중복 체크
@@ -66,4 +65,5 @@ public class UserService implements UserDetailsService {
     public boolean checkNicknameDuplicate(String userId) {
         return userRepository.existsByNickname(userId);
     }
+
 }

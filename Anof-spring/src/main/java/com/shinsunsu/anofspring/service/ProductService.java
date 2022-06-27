@@ -18,29 +18,28 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Transactional(readOnly = true) //인식한 바코드 식품이 식품 db에 있는지 확인
+    //바코드로 식품이 식품 db에 있는지 확인
+    @Transactional(readOnly = true)
     public boolean checkBarcodeExist(String barcode) {
         return productRepository.existsByBarcode(barcode);
     }
-    @Transactional(readOnly = true) //인식한 바코드 식품 상세 정보 제공
-    public Product detailProductByBarcode(String barcode) {
 
-        return productRepository.findByBarcode(barcode)
-                .orElseThrow(()-> {throw new ProductException("해당 상품을 찾을 수 없습니다.");
-                });
+    //바코드로 식품 상세 정보 제공
+    @Transactional(readOnly = true)
+    public Product detailProductByBarcode(String barcode) {
+        return productRepository.findByBarcode(barcode);
     }
 
-    @Transactional(readOnly = true) //검색된 식품명이 식품 db에 있는지 확인
+    //식품명으로 식품이 db에 있는지 확인
+    @Transactional(readOnly = true)
     public boolean checkNameExist(String name) {
         return productRepository.existsByName(name);
     }
 
-    @Transactional(readOnly = true) //식품명 검색을 통한 상세 정보 제공
+    //식품명 검색을 통한 상세 정보 제공
+    @Transactional(readOnly = true)
     public Product detailProductByName(String name) {
-
-        return productRepository.findByName(name)
-                .orElseThrow(()-> {throw new ProductException("해당 상품을 찾을 수 없습니다.");
-                });
+        return productRepository.findByName(name);
     }
 
     @Transactional(readOnly = true) //상품명 검색 -> 상품 리스트 제공
