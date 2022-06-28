@@ -2,18 +2,17 @@ package com.shinsunsu.anofspring.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.service.ProductService;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -53,21 +52,12 @@ public class ProductController {
 
     }
 
+    //get으로 변경
     @PostMapping("/search") //상품명 검색 -> 상품 리스트 제공
-    public ResponseEntity<Object> search(@RequestBody Map<String, String> keyword) {
+    public ResponseEntity<List<ProductResponse>> search(@RequestBody Map<String, String> keyword, Principal principal) {
         String productKeyword = keyword.get("keyword");
-        //if(productKeyword.isEmpty()||productKeyword.equals(" ")) return null;
-
         return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
     }
 
-    @PostMapping("/search") //상품명 검색 -> 상품 리스트 제공
-    public ResponseEntity<Object> search(@RequestBody Map<String, String> keyword, Principal principal) {
-        System.out.println(principal.getName());
-        //User user = userService.loadUserByUsername()
-        String productKeyword = keyword.get("keyword");
-
-        return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
-    }
 
 }
