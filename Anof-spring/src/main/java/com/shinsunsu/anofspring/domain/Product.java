@@ -136,7 +136,8 @@ public class Product {
     @ColumnDefault("0")
     private int egg;
 
-    @Column(length = 5000)
+    //이미지를 다 넣을 수 없어서 일단은 true변경
+    @Column(nullable = true, length = 5000)
     private String image;
 
     @Column(nullable = false, length = 100)
