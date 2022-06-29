@@ -49,7 +49,7 @@ public class User implements UserDetails {
     private Ingredient ingredient;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="likeProductId", referencedColumnName="userId")
+    @JoinColumn(name = "likeProductId")
     private List<LikeProduct> likeProduct;
 
     @OneToMany(cascade = CascadeType.ALL)
