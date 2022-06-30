@@ -23,13 +23,13 @@ public class DislikeProductController {
     @Autowired
     private DislikeProductService dislikeProductService;
 
-    @PostMapping("/like")
-    public ResponseEntity<Object> saveLikeProduct(@RequestBody Map<String, String> name, Principal principal){
+    @PostMapping("/dislike")
+    public ResponseEntity<Object> saveDislikeProduct(@RequestBody Map<String, String> name, Principal principal){
         return new ResponseEntity<>(dislikeProductService.dislikeProduct(name.get("name"), principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping("/like/list")
-    public ResponseEntity<List<ProductResponse>> listLikeProduct(Principal principal) {
+    @PostMapping("/dislike/list")
+    public ResponseEntity<List<ProductResponse>> listDislikeProduct(Principal principal) {
         return new ResponseEntity<>(dislikeProductService.listDislikeProduct(principal.getName()), HttpStatus.OK);
     }
 }
