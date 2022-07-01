@@ -23,8 +23,8 @@ public class LikeProductController {
     @Autowired private LikeProductService likeProductService;
 
     @PostMapping("/like")
-    public ResponseEntity<Object> saveLikeProduct(@RequestBody Map<String, String> name, Principal principal){
-        return new ResponseEntity<>(likeProductService.likeProduct(name.get("name"), principal.getName()), HttpStatus.OK);
+    public ResponseEntity saveLikeProduct(@RequestBody Map<String, String> name, Principal principal){
+        return new ResponseEntity(likeProductService.likeProduct(name.get("name"), principal.getName()), HttpStatus.OK);
     }
 
     @PostMapping("/like/list")

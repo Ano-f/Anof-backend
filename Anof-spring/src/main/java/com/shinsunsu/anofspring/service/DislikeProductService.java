@@ -25,7 +25,7 @@ public class DislikeProductService {
     @Autowired private DislikeProductRepository dislikeProductRepository;
 
     @Transactional
-    public Integer dislikeProduct(String name, String id) {
+    public boolean dislikeProduct(String name, String id) {
         Product product = productRepository.findByName(name);
         User user = userRepository.findByUserId(id).orElseThrow();
         DislikeProduct dislikeProduct = dislikeProductRepository.findByProductAndUser(product, user);
@@ -33,14 +33,14 @@ public class DislikeProductService {
         if(dislikeProduct==null) {
             DislikeProduct newDislikeProduct = new DislikeProduct(0, user, product);
             dislikeProductRepository.save(newDislikeProduct);
-            return 1;
+            return true;
         }
         if(dislikeProduct.getIsDelete()==1) {
             dislikeProduct.setIsDelete(0);
-            return 1;
+            return true;
         }
         dislikeProduct.setIsDelete(1);
-        return 2;
+        return true;
     }
 
     @Transactional(readOnly=true)

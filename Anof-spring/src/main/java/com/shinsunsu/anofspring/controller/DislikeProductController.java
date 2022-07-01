@@ -24,8 +24,8 @@ public class DislikeProductController {
     private DislikeProductService dislikeProductService;
 
     @PostMapping("/dislike")
-    public ResponseEntity<Object> saveDislikeProduct(@RequestBody Map<String, String> name, Principal principal){
-        return new ResponseEntity<>(dislikeProductService.dislikeProduct(name.get("name"), principal.getName()), HttpStatus.OK);
+    public ResponseEntity saveDislikeProduct(@RequestBody Map<String, String> name, Principal principal){
+        return new ResponseEntity(dislikeProductService.dislikeProduct(name.get("name"), principal.getName()), HttpStatus.OK);
     }
 
     @PostMapping("/dislike/list")

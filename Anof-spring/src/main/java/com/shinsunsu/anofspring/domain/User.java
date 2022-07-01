@@ -48,14 +48,6 @@ public class User implements UserDetails {
     @JoinColumn(name="IngredientId")
     private Ingredient ingredient;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "likeProductId")
-    private List<LikeProduct> likeProduct;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="dislikeProductId", referencedColumnName="userId")
-    private List<DislikeProduct> dislikeProduct;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();

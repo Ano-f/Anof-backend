@@ -24,7 +24,7 @@ public class LikeProductService {
     @Autowired private LikeProductRepository likeProductRepository;
 
     @Transactional
-    public Integer likeProduct(String name, String id) {
+    public boolean likeProduct(String name, String id) {
         Product product = productRepository.findByName(name);
         User user = userRepository.findByUserId(id).orElseThrow();
         LikeProduct likeProduct = likeProductRepository.findByProductAndUser(product, user);
@@ -32,14 +32,14 @@ public class LikeProductService {
         if(likeProduct==null) {
             LikeProduct newLikeProduct = new LikeProduct(0, user, product);
             likeProductRepository.save(newLikeProduct);
-            return 1;
+            return true;
         }
         if(likeProduct.getIsDelete()==1) {
             likeProduct.setIsDelete(0);
-            return 1;
+            return true;
         }
         likeProduct.setIsDelete(1);
-        return 2;
+        return true;
     }
 
     @Transactional(readOnly=true)
