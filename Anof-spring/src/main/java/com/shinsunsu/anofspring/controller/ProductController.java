@@ -2,6 +2,7 @@ package com.shinsunsu.anofspring.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.service.ProductService;
 import com.shinsunsu.anofspring.service.UserService;
@@ -59,5 +60,15 @@ public class ProductController {
         return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
     }
 
+    @PostMapping("/new") //상품 등록
+    public ResponseEntity registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
+        return new ResponseEntity(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
+    }
+
+    @PostMapping("/custom")
+    public ResponseEntity<Object> customInfo(@RequestBody Map<String, String> name, Principal principal) {
+
+        return new ResponseEntity<>(productService.customInfo(name.get("name"), principal.getName()), HttpStatus.OK);
+    }
 
 }
