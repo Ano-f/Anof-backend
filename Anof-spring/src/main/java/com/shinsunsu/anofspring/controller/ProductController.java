@@ -2,7 +2,7 @@ package com.shinsunsu.anofspring.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.service.ProductService;
 import com.shinsunsu.anofspring.service.UserService;
@@ -53,13 +53,22 @@ public class ProductController {
 
     }
 
-    //키워드로 상품명 검색
-    @PostMapping("/search/{keyword}")
-    public ResponseEntity<List<ProductResponse>> search(@PathVariable String keyword, Principal principal) {
-        //String productKeyword = keyword.get("keyword");
-        return new ResponseEntity<>(productService.search(keyword), HttpStatus.OK);
+    //get으로 변경
+    @PostMapping("/search") //상품명 검색 -> 상품 리스트 제공
+    public ResponseEntity<List<ProductResponse>> search(@RequestBody Map<String, String> keyword, Principal principal) {
+        String productKeyword = keyword.get("keyword");
+        return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
     }
 
+    @PostMapping("/new") //상품 등록
+    public ResponseEntity registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
+        return new ResponseEntity(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
+    }
 
+    @PostMapping("/custom")
+    public ResponseEntity<Object> customInfo(@RequestBody Map<String, String> name, Principal principal) {
+
+        return new ResponseEntity<>(productService.customInfo(name.get("name"), principal.getName()), HttpStatus.OK);
+    }
 
 }

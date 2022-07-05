@@ -2,8 +2,11 @@ package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.Product;
 
+import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.repository.ProductRepository;
+import com.shinsunsu.anofspring.repository.RegisterProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -20,6 +25,7 @@ public class ProductService {
 
     @Autowired private ProductRepository productRepository;
     @Autowired private UserRepository userRepository;
+    @Autowired private RegisterProductRepository registerProductRepository;
 
     //바코드로 식품이 식품 db에 있는지 확인
     @Transactional(readOnly = true)
@@ -58,4 +64,31 @@ public class ProductService {
         return productList;
     }
 
+    @Transactional //상품 등록
+    public boolean registerProduct(RegisterProductRequest request, String userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
+        registerProductRepository.save(RegisterProductRequest.RegisterProduct(request, user));
+        return true;
+    }
+
+    @Transactional //맞춤 정보
+    public Map customInfo(String name, String userId) {
+        String[] customAllergy = {"wheat", "milk", "buckwheat", "peanut", "soybean", "mackerel", "crab", "shrimp", "pork", "peach", "tomato",
+                "walnut", "chicken", "beef", "squid", "shellfish", "egg"};
+
+        List<Integer> productAllergy = productRepository.findAllergy(name).CustomAllergy();
+        List<Integer> userAllergy = userRepository.findAllergy(userId).CustomAllergy();
+
+        Map<String, Integer> allergy = new HashMap<String, Integer>();
+
+        int i = 0;
+        for(int a : userAllergy) {
+            if(a==1) {
+                allergy.put(customAllergy[i], productAllergy.get(i));
+            }
+            i++;
+        }
+
+        return allergy;
+    }
 }

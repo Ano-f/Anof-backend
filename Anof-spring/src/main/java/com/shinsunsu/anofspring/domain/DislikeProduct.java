@@ -16,12 +16,20 @@ public class DislikeProduct {
     private Long id;
 
     @Column(nullable = false)
-    private int enable;
+    private int isDelete;
 
-    @Column(nullable = false, length = 50, unique = true)
-    private String userId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "productId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "productId", nullable = false)
     private Product product;
+
+    public DislikeProduct() {}
+    public DislikeProduct(int i, User user, Product product) {
+        this.isDelete = i;
+        this.user = user;
+        this.product = product;
+    }
 }

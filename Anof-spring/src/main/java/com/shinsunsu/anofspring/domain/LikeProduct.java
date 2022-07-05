@@ -1,8 +1,6 @@
 package com.shinsunsu.anofspring.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,12 +14,20 @@ public class LikeProduct {
     private Long id;
 
     @Column(nullable = false)
-    private int enable;
+    private int isDelete; //선호 식품에서 삭제할 경우 1
 
-    @Column(nullable = false, length = 50, unique = true)
-    private String userId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "productId")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "productId", nullable = false)
     private Product product;
+
+    public LikeProduct() {}
+    public LikeProduct(int i, User user, Product product) {
+        this.isDelete = i;
+        this.user = user;
+        this.product = product;
+    }
 }
