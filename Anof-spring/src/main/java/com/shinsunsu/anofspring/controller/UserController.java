@@ -39,18 +39,18 @@ public class UserController {
     }
 
     //유저 로그인 아이디 중복 체크
-    @PostMapping("/checkUserId")
-    public Boolean checkUserIdDuplicate(@RequestBody Map<String,String> paramMap) {
-        String userId= paramMap.get("userId");
+    @GetMapping("/checkUserId/{userId}")
+    public Boolean checkUserIdDuplicate(@PathVariable String userId) {
+        //String userId= paramMap.get("userId");
         return userService.checkLoginIdDuplicate(userId);
         //return true -> 존재하는 아이디 -> 회원가입 불가능
         //retrun fasle ->  사용 가능한 아이디
     }
 
     //유저 닉네임 중복 체크
-    @PostMapping("/checkNickname")
-    public Boolean checkNicknameDuplicate(@RequestBody Map<String,Object> user) {
-        String nickname= (String) user.get("nickname");
+    @GetMapping("/checkNickname/{nickname}")
+    public Boolean checkNicknameDuplicate(@PathVariable String nickname) {
+        //String nickname= (String) user.get("nickname");
         return userService.checkNicknameDuplicate(nickname);
         //return true -> 존재하는 닉네임 -> 회원가입 불가능
         //retrun fasle ->  사용 가능한 닉네임
@@ -62,7 +62,6 @@ public class UserController {
         User loginUser = userService.loadUserByUsername(user.getUserId());
 
         if (!passwordEncoder.matches(user.getPassword(), loginUser.getPassword())) {
-            System.out.println("111");
             throw new PasswordErrorException("잘못된 비밀번호입니다.");
         }
 
