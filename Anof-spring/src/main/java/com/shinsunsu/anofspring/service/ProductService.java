@@ -2,9 +2,7 @@ package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.Product;
 
-import com.shinsunsu.anofspring.dto.SearchProductDto;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
-import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.ProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
