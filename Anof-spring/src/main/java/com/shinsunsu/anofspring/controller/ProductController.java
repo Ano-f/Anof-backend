@@ -65,10 +65,11 @@ public class ProductController {
         return new ResponseEntity(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping("/custom")
-    public ResponseEntity<Object> customInfo(@RequestBody Map<String, String> name, Principal principal) {
-
-        return new ResponseEntity<>(productService.customInfo(name.get("name"), principal.getName()), HttpStatus.OK);
+    @PostMapping("/custom") //맞춤 정보
+    public ResponseEntity<Object> customInfo(@RequestBody Map<String, String> map, Principal principal) {
+        return new ResponseEntity<>(productService.customInfo(map, principal.getName()), HttpStatus.OK);
     }
+
+
 
 }
