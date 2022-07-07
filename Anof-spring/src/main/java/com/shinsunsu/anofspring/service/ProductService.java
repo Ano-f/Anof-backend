@@ -113,9 +113,7 @@ public class ProductService {
 
         i= 0;
         for(int a : userIngredient) {
-            if(a==1) {
-                ingredient.put(customIngredient[i], productIngredient.get(i));
-            }
+            if(a==1) ingredient.put(customIngredient[i], productIngredient.get(i));
             i++;
         }
 
