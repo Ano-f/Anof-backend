@@ -54,10 +54,9 @@ public class ProductController {
     }
 
     //get으로 변경
-    @PostMapping("/search") //상품명 검색 -> 상품 리스트 제공
-    public ResponseEntity<List<ProductResponse>> search(@RequestBody Map<String, String> keyword, Principal principal) {
-        String productKeyword = keyword.get("keyword");
-        return new ResponseEntity<>(productService.search(productKeyword), HttpStatus.OK);
+    @GetMapping("/search/{keyword}") //상품명 검색 -> 상품 리스트 제공
+    public ResponseEntity<List<ProductResponse>> search(@PathVariable String keyword, Principal principal) {
+        return new ResponseEntity<>(productService.search(keyword), HttpStatus.OK);
     }
 
     @PostMapping("/new") //상품 등록
