@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -17,18 +14,18 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/dislikeprocut")
 public class DislikeProductController {
 
     @Autowired
     private DislikeProductService dislikeProductService;
 
-    @PostMapping("/dislike")
-    public ResponseEntity saveDislikeProduct(@RequestBody Map<String, String> name, Principal principal){
-        return new ResponseEntity(dislikeProductService.dislikeProduct(name.get("name"), principal.getName()), HttpStatus.OK);
+    @GetMapping("/{productId}")
+    public ResponseEntity saveDislikeProduct(@PathVariable Long productId, Principal principal){
+        return new ResponseEntity(dislikeProductService.dislikeProduct(productId, principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping("/dislike/list")
+    @PostMapping("/list")
     public ResponseEntity<List<ProductResponse>> listDislikeProduct(Principal principal) {
         return new ResponseEntity<>(dislikeProductService.listDislikeProduct(principal.getName()), HttpStatus.OK);
     }

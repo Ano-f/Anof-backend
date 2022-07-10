@@ -26,7 +26,8 @@ public class ProductController {
 
 
     //get으로 변경 예정
-    @PostMapping("/detail/barcode") //바코드 인식을 통한 식품 상세 조회
+    //바코드 인식을 통한 식품 상세 조회
+    @PostMapping("/detail/barcode")
     public ResponseEntity<Object> detailProductByBarcode(@RequestBody Map<String, String> barcode) throws JsonProcessingException {
       
         String barcodeNumber = barcode.get("barcode");
@@ -39,11 +40,9 @@ public class ProductController {
 
     }
 
-    //get으로 변경 예정
-    @PostMapping("/detail/name") //식품명 검색을 통한 식품 상세 조회
-    public ResponseEntity<Object> detailProductByName(@RequestBody Map<String, String> name, Principal principal) throws JsonProcessingException {
-        System.out.println(principal.getName());
-        String productName = name.get("name");
+    //식품명 검색을 통한 식품 상세 조회
+    @GetMapping("/detail/{name}")
+    public ResponseEntity<Object> detailProductByName(@PathVariable String productName, Principal principal) throws JsonProcessingException {
         if(!productService.checkNameExist(productName)) {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
         }
@@ -53,18 +52,20 @@ public class ProductController {
 
     }
 
-    //get으로 변경
-    @GetMapping("/search/{keyword}") //상품명 검색 -> 상품 리스트 제공
+    //상품명 검색 -> 상품 리스트 제공
+    @GetMapping("/search/{keyword}")
     public ResponseEntity<List<ProductResponse>> search(@PathVariable String keyword, Principal principal) {
         return new ResponseEntity<>(productService.search(keyword), HttpStatus.OK);
     }
 
-    @PostMapping("/new") //상품 등록
+    //상품 등록 요청
+    @PostMapping("/requestProduct")
     public ResponseEntity registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
         return new ResponseEntity(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping("/custom") //맞춤 정보
+    //맞춤 정보
+    @PostMapping("/custom")
     public ResponseEntity<Object> customInfo(@RequestBody Map<String, String> map, Principal principal) {
         return new ResponseEntity<>(productService.customInfo(map, principal.getName()), HttpStatus.OK);
     }

@@ -4,11 +4,13 @@ import com.shinsunsu.anofspring.domain.DislikeProduct;
 import com.shinsunsu.anofspring.domain.Product;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
+import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.DislikeProductRepository;
 import com.shinsunsu.anofspring.repository.ProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +27,9 @@ public class DislikeProductService {
     @Autowired private DislikeProductRepository dislikeProductRepository;
 
     @Transactional
-    public boolean dislikeProduct(String name, String id) {
-        Product product = productRepository.findByName(name);
+    public boolean dislikeProduct(Long productId, String id) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException("존재하지 않는 상품번호 입니다."));
         User user = userRepository.findByUserId(id).orElseThrow();
         DislikeProduct dislikeProduct = dislikeProductRepository.findByProductAndUser(product, user);
 
