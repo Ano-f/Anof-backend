@@ -4,6 +4,7 @@ import com.shinsunsu.anofspring.domain.LikeProduct;
 import com.shinsunsu.anofspring.domain.Product;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
+import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.LikeProductRepository;
 import com.shinsunsu.anofspring.repository.ProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
@@ -24,8 +25,9 @@ public class LikeProductService {
     @Autowired private LikeProductRepository likeProductRepository;
 
     @Transactional
-    public boolean likeProduct(String name, String id) {
-        Product product = productRepository.findByName(name);
+    public boolean likeProduct(Long productId, String id) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException("존재하지 않는 상품 번호입니다."));
         User user = userRepository.findByUserId(id).orElseThrow();
         LikeProduct likeProduct = likeProductRepository.findByProductAndUser(product, user);
 
