@@ -40,14 +40,14 @@ public class ProductController {
 
     }
 
-    //식품명 검색을 통한 식품 상세 조회
-    @GetMapping("/detail/{productName}")
-    public ResponseEntity<Object> detailProductByName(@PathVariable String productName, Principal principal) throws JsonProcessingException {
-        if(!productService.checkNameExist(productName)) {
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
-        }
+    //식품 상세 조회
+    @GetMapping("/detail/{productId}")
+    public ResponseEntity<Object> detailProductByName(@PathVariable Long productId, Principal principal) throws JsonProcessingException {
+//        if(!productService.checkNameExist(productName)) {
+//            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+//        }
         ObjectMapper mapper = new ObjectMapper();
-        String product = mapper.writeValueAsString(productService.detailProductByName(productName));
+        String product = mapper.writeValueAsString(productService.detailProductByProductId(productId));
         return new ResponseEntity<>(product, HttpStatus.OK);
 
     }
