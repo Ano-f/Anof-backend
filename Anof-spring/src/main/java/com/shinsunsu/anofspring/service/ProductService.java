@@ -51,8 +51,9 @@ public class ProductService {
 
     //식품명 검색을 통한 상세 정보 제공
     @Transactional(readOnly = true)
-    public Product detailProductByName(String name) {
-        return productRepository.findByName(name);
+    public Product detailProductByProductId(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductException("존재하지 않는 상품 번호입니다"));
     }
 
     //상품명 검색 -> 상품 리스트 제공
