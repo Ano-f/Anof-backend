@@ -41,7 +41,7 @@ public class ProductController {
     }
 
     //식품명 검색을 통한 식품 상세 조회
-    @GetMapping("/detail/{name}")
+    @GetMapping("/detail/{productName}")
     public ResponseEntity<Object> detailProductByName(@PathVariable String productName, Principal principal) throws JsonProcessingException {
         if(!productService.checkNameExist(productName)) {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
