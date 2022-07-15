@@ -29,7 +29,6 @@ public class ProductController {
     //바코드 인식을 통한 식품 상세 조회
     @PostMapping("/detail/barcode")
     public ResponseEntity<Object> detailProductByBarcode(@RequestBody Map<String, String> barcode) throws JsonProcessingException {
-      
         String barcodeNumber = barcode.get("barcode");
         if(!productService.checkBarcodeExist(barcodeNumber)) { //인식한 바코드 식품 db에 존재하지 않을 경우
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
@@ -55,6 +54,7 @@ public class ProductController {
     //상품명 검색 -> 상품 리스트 제공
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<ProductResponse>> search(@PathVariable String keyword, Principal principal) {
+        System.out.println(keyword);
         return new ResponseEntity<>(productService.search(keyword), HttpStatus.OK);
     }
 

@@ -26,6 +26,7 @@ public class LikeProductController {
 
     @PostMapping("/list")
     public ResponseEntity<List<ProductResponse>> listLikeProduct(Principal principal) {
+        System.out.println(principal.getName());
         return new ResponseEntity<>(likeProductService.listLikeProduct(principal.getName()), HttpStatus.OK);
     }
 }

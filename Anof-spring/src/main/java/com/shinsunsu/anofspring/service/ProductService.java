@@ -59,13 +59,14 @@ public class ProductService {
     //상품명 검색 -> 상품 리스트 제공
     @Transactional(readOnly = true)
     public List<ProductResponse> search(String keyword) {
-        List<Product> products = productRepository.findByNameContaining(keyword);
+        System.out.println(keyword);
+        List<Product> products = productRepository.findByNameContaining(keyword)
+                .orElseThrow(() -> new ProductException("존재 상품 X"));
         List<ProductResponse> productList = new ArrayList<>();
 
         for (Product product : products) {
             productList.add(ProductResponse.productResponse(product));
         }
-
         return productList;
     }
 
