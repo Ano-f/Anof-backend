@@ -31,16 +31,10 @@ public class ProductService {
     //@Value("${flask.url}")
     //private final String url;
 
-    //바코드로 식품이 식품 db에 있는지 확인
+    //식품Id로 식품이 db에 있는지 확인
     @Transactional(readOnly = true)
-    public boolean checkBarcodeExist(String barcode) {
-        return productRepository.existsByBarcode(barcode);
-    }
-
-    //바코드로 식품 상세 정보 제공
-    @Transactional(readOnly = true)
-    public Product detailProductByBarcode(String barcode) {
-        return productRepository.findByBarcode(barcode);
+    public boolean checkProductIdExist(Long productId) {
+        return productRepository.existsById(productId);
     }
 
     //식품명으로 식품이 db에 있는지 확인
@@ -59,7 +53,6 @@ public class ProductService {
     //상품명 검색 -> 상품 리스트 제공
     @Transactional(readOnly = true)
     public List<ProductResponse> search(String keyword) {
-        System.out.println(keyword);
         List<Product> products = productRepository.findByNameContaining(keyword)
                 .orElseThrow(() -> new ProductException("존재 상품 X"));
         List<ProductResponse> productList = new ArrayList<>();

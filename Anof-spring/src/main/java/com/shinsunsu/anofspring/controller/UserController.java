@@ -42,7 +42,6 @@ public class UserController {
     //유저 로그인 아이디 중복 체크
     @GetMapping("/checkUserId/{userId}")
     public Boolean checkUserIdDuplicate(@PathVariable String userId) {
-        //String userId= paramMap.get("userId");
         return userService.checkLoginIdDuplicate(userId);
         //return true -> 존재하는 아이디 -> 회원가입 불가능
         //retrun fasle ->  사용 가능한 아이디
@@ -51,7 +50,6 @@ public class UserController {
     //유저 닉네임 중복 체크
     @GetMapping("/checkNickname/{nickname}")
     public Boolean checkNicknameDuplicate(@PathVariable String nickname) {
-        //String nickname= (String) user.get("nickname");
         return userService.checkNicknameDuplicate(nickname);
         //return true -> 존재하는 닉네임 -> 회원가입 불가능
         //retrun fasle ->  사용 가능한 닉네임
