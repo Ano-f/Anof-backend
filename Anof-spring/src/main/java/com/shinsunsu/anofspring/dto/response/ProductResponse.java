@@ -28,7 +28,9 @@ public class ProductResponse {
 
     public static ProductResponse productResponse(Product product) {
         return ProductResponse.builder()
+                .id(product.getId())
                 .name(product.getName())
+                .type(product.getType())
                 .brand(product.getBrand())
                 .image(product.getImage())
                 .build();

@@ -54,7 +54,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> search(String keyword) {
         List<Product> products = productRepository.findByNameContaining(keyword)
-                .orElseThrow(() -> new ProductException("존재 상품 X"));
+                .orElseThrow(() -> new ProductException("상품이 존재하지 않습니다."));
         List<ProductResponse> productList = new ArrayList<>();
 
         for (Product product : products) {

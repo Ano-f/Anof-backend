@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByName(String name);
     Optional<Product> findById(Long productId);
 
-    Optional<List<Product>> findByNameContaining(String keyword);
+    Optional<List<Product>> findByNameContaining(@Param("keyword") String keyword);
 
     @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyDto(p) from Product p where p.name = :name")
     CustomAllergyDto findAllergyByName(@Param("name") String name);
