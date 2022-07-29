@@ -13,11 +13,11 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     boolean existsByBarcode(String barcode);
+    boolean existsById(Long productId);
     boolean existsByName(String name);
-    Product findByBarcode(String barcode);
     Optional<Product> findById(Long productId);
 
-    Optional<List<Product>> findByNameContaining(String keyword);
+    Optional<List<Product>> findByNameContaining(@Param("keyword") String keyword);
 
     @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyDto(p) from Product p where p.name = :name")
     CustomAllergyDto findAllergyByName(@Param("name") String name);

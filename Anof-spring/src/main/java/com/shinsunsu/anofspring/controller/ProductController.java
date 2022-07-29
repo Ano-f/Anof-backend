@@ -1,7 +1,6 @@
 package com.shinsunsu.anofspring.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.service.ProductService;
@@ -25,36 +24,21 @@ public class ProductController {
     @Autowired private UserService userService;
 
 
-    //get으로 변경 예정
-    //바코드 인식을 통한 식품 상세 조회
-    @PostMapping("/detail/barcode")
-    public ResponseEntity<Object> detailProductByBarcode(@RequestBody Map<String, String> barcode) throws JsonProcessingException {
-        String barcodeNumber = barcode.get("barcode");
-        if(!productService.checkBarcodeExist(barcodeNumber)) { //인식한 바코드 식품 db에 존재하지 않을 경우
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        String product = mapper.writeValueAsString(productService.detailProductByBarcode(barcodeNumber));
-        return new ResponseEntity<>(product, HttpStatus.OK);
-
-    }
-
     //식품 상세 조회
     @GetMapping("/detail/{productId}")
-    public ResponseEntity<Object> detailProductByName(@PathVariable Long productId, Principal principal) throws JsonProcessingException {
-//        if(!productService.checkNameExist(productName)) {
-//            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
-//        }
-        ObjectMapper mapper = new ObjectMapper();
-        String product = mapper.writeValueAsString(productService.detailProductByProductId(productId));
-        return new ResponseEntity<>(product, HttpStatus.OK);
-
+    public ResponseEntity<Object> detailProduct(@PathVariable Long productId, Principal principal) {
+        User user = userService.loadUserByUsername(principal.getName());
+        if(!productService.checkProductIdExist(productId)) { //인식한 바코드 식품 db에 존재하지 않을 경우
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(ProductResponse.productDetailResponse(productService.detailProductByProductId(productId)), HttpStatus.OK);
     }
 
-    //상품명 검색 -> 상품 리스트 제공
+    //키워드로 식품 리스트 검색
+    //상품Id, 상품명, 이미지, type, brand 제외 모두 null로 가는데 product 전체 정보를 다 보내고 프론트에서 뽑아쓰는게 좋은지
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<ProductResponse>> search(@PathVariable String keyword, Principal principal) {
-        System.out.println(keyword);
+    public ResponseEntity<List<ProductResponse>> searchByKeyword(@PathVariable String keyword, Principal principal) {
+        User user = userService.loadUserByUsername(principal.getName());
         return new ResponseEntity<>(productService.search(keyword), HttpStatus.OK);
     }
 
@@ -64,7 +48,7 @@ public class ProductController {
         return new ResponseEntity(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
     }
 
-    //맞춤 정보
+    //맞춤 정보 제공
     @PostMapping("/custom")
     public ResponseEntity<Object> customInfo(@RequestBody Map<String, String> map, Principal principal) {
         return new ResponseEntity<>(productService.customInfo(map, principal.getName()), HttpStatus.OK);

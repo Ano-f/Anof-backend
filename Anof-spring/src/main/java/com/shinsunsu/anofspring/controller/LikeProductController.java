@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,7 +25,6 @@ public class LikeProductController {
 
     @PostMapping("/list")
     public ResponseEntity<List<ProductResponse>> listLikeProduct(Principal principal) {
-        System.out.println(principal.getName());
         return new ResponseEntity<>(likeProductService.listLikeProduct(principal.getName()), HttpStatus.OK);
     }
 }
