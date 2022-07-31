@@ -37,18 +37,18 @@ public class DislikeProductService {
             dislikeProductRepository.save(newDislikeProduct);
             return true;
         }
-        if(dislikeProduct.getIsSelete()==0) {
-            dislikeProduct.setIsSelete(1);
+        if(dislikeProduct.getIsSelect()==0) {
+            dislikeProduct.setIsSelect(1);
             return true;
         }
-        dislikeProduct.setIsSelete(0);
+        dislikeProduct.setIsSelect(0);
         return true;
     }
 
     @Transactional(readOnly=true)
     public List<ProductResponse.productResponse> listDislikeProduct(String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow();
-        List<DislikeProduct> dislikeProducts = dislikeProductRepository.findByUserAndIsSelete(user, 1);
+        List<DislikeProduct> dislikeProducts = dislikeProductRepository.findByUserAndIsSelect(user, 1);
         List<ProductResponse.productResponse> dislikeProductList = new ArrayList<>();
 
         for (DislikeProduct dislikeProduct : dislikeProducts) {

@@ -16,7 +16,7 @@ public class DislikeProduct {
     private Long id;
 
     @Column(nullable = false)
-    private int isSelete;
+    private int isSelect;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId", nullable = false)
@@ -28,7 +28,7 @@ public class DislikeProduct {
 
     public DislikeProduct() {}
     public DislikeProduct(int i, User user, Product product) {
-        this.isSelete = i;
+        this.isSelect = i;
         this.user = user;
         this.product = product;
     }
