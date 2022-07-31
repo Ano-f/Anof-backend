@@ -11,5 +11,5 @@ public interface DislikeProductRepository extends JpaRepository<DislikeProduct, 
 
     DislikeProduct findByProductAndUser(Product product, User user);
 
-    List<DislikeProduct> findByUserAndIsSelete(User user, int i);
+    List<DislikeProduct> findByUserAndIsSelect(User user, int i);
 }

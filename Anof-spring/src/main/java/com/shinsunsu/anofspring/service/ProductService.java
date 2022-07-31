@@ -85,15 +85,17 @@ public class ProductService {
 
         List<Integer> productAllergy = new ArrayList<>();
         List<String> productIngredient = new ArrayList<>();
-
+        Product product = new Product();
         if(map.containsKey("barcode")) {
             if(!productRepository.existsByBarcode(map.get("barcode"))) {throw new ProductException("존재하지 않는 상품입니다");}
             productAllergy = productRepository.findAllergyByBarcode(map.get("barcode")).CustomAllergy();
             productIngredient = productRepository.findIngredientByBarcode(map.get("barcode")).CustomIngredient();
+            product = productRepository.findByBarcode(map.get("barcode"));
         }
         if(map.containsKey("name")) {
             productAllergy = productRepository.findAllergyByName(map.get("name")).CustomAllergy();
             productIngredient = productRepository.findIngredientByName(map.get("name")).CustomIngredient();
+            product = productRepository.findByName(map.get("name"));
         }
 
         List<Integer> userAllergy = userRepository.findAllergy(userId).CustomAllergy();
@@ -119,6 +121,10 @@ public class ProductService {
         }
 
         Map<String, Object> custom = new HashMap<>();
+        custom.put("Id", product.getId());
+        custom.put("name", product.getName());
+        custom.put("brand", product.getBrand());
+        custom.put("image", product.getImage());
         custom.put("allergy", allergy);
         custom.put("ingredient", ingredient);
 
@@ -143,15 +149,14 @@ public class ProductService {
 
         // RestTemplate의 exchange 메소드를 통해 URL에 HttpEntity와 함께 요청
         RestTemplate restTemplate = new RestTemplate();
+
+        //url주소 flask배포 주소로 변경 예정
         ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:5005/recommend", HttpMethod.POST,
                 entity, String.class);
 
         String str = responseEntity.getBody();
         String[] productId_arr = str.split(",");
-        System.out.println("------------------------");
-        for(int i=0;i<productId_arr.length;i++) {
-            System.out.println(productId_arr[i]);
-        }
+
         List<ProductResponse.productResponse> productList = new ArrayList<>();
 
         for(String productId : productId_arr) {
