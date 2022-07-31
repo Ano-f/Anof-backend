@@ -10,7 +10,6 @@ import com.shinsunsu.anofspring.repository.ProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,26 +33,26 @@ public class DislikeProductService {
         DislikeProduct dislikeProduct = dislikeProductRepository.findByProductAndUser(product, user);
 
         if(dislikeProduct==null) {
-            DislikeProduct newDislikeProduct = new DislikeProduct(0, user, product);
+            DislikeProduct newDislikeProduct = new DislikeProduct(1, user, product);
             dislikeProductRepository.save(newDislikeProduct);
             return true;
         }
-        if(dislikeProduct.getIsDelete()==1) {
-            dislikeProduct.setIsDelete(0);
+        if(dislikeProduct.getIsSelete()==0) {
+            dislikeProduct.setIsSelete(1);
             return true;
         }
-        dislikeProduct.setIsDelete(1);
+        dislikeProduct.setIsSelete(0);
         return true;
     }
 
     @Transactional(readOnly=true)
-    public List<ProductResponse> listDislikeProduct(String userId) {
+    public List<ProductResponse.productResponse> listDislikeProduct(String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow();
-        List<DislikeProduct> dislikeProducts = dislikeProductRepository.findByUserAndIsDelete(user, 0);
-        List<ProductResponse> dislikeProductList = new ArrayList<>();
+        List<DislikeProduct> dislikeProducts = dislikeProductRepository.findByUserAndIsSelete(user, 1);
+        List<ProductResponse.productResponse> dislikeProductList = new ArrayList<>();
 
         for (DislikeProduct dislikeProduct : dislikeProducts) {
-            dislikeProductList.add(ProductResponse.productResponse(dislikeProduct.getProduct()));
+            dislikeProductList.add(new ProductResponse.productResponse(dislikeProduct.getProduct()));
         }
 
         return dislikeProductList;

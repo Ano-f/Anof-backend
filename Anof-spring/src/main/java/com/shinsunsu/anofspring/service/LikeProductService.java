@@ -32,26 +32,26 @@ public class LikeProductService {
         LikeProduct likeProduct = likeProductRepository.findByProductAndUser(product, user);
 
         if(likeProduct==null) {
-            LikeProduct newLikeProduct = new LikeProduct(0, user, product);
+            LikeProduct newLikeProduct = new LikeProduct(1, user, product);
             likeProductRepository.save(newLikeProduct);
             return true;
         }
-        if(likeProduct.getIsDelete()==1) {
-            likeProduct.setIsDelete(0);
+        if(likeProduct.getIsSelect()==0) {
+            likeProduct.setIsSelect(1);
             return true;
         }
-        likeProduct.setIsDelete(1);
+        likeProduct.setIsSelect(0);
         return true;
     }
 
     @Transactional(readOnly=true)
-    public List<ProductResponse> listLikeProduct(String userId) {
+    public List<ProductResponse.productResponse> listLikeProduct(String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow();
-        List<LikeProduct> likeProducts = likeProductRepository.findByUserAndIsDelete(user, 0);
-        List<ProductResponse> likeProductList = new ArrayList<>();
+        List<LikeProduct> likeProducts = likeProductRepository.findByUserAndIsSelect(user, 1);
+        List<ProductResponse.productResponse> likeProductList = new ArrayList<>();
 
         for (LikeProduct likeProduct : likeProducts) {
-            likeProductList.add(ProductResponse.productResponse(likeProduct.getProduct()));
+            likeProductList.add(new ProductResponse.productResponse(likeProduct.getProduct()));
         }
 
         return likeProductList;

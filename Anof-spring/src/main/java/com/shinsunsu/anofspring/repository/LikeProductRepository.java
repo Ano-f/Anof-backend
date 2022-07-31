@@ -10,5 +10,5 @@ import java.util.List;
 public interface LikeProductRepository extends JpaRepository<LikeProduct, Long> {
     LikeProduct findByProductAndUser(Product product, User user);
 
-    List<LikeProduct> findByUserAndIsDelete(User user, int i);
+    List<LikeProduct> findByUserAndIsSelect(User user, int i);
 }
