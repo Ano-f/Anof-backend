@@ -58,6 +58,7 @@ public class ProductController {
 
     @PostMapping("/recommend") //get으로 바꾸기 가능?
     public ResponseEntity<Object> recommend(Principal principal) throws JsonProcessingException {
+        System.out.println(principal.getName());
         return new ResponseEntity<>(productService.recommend(principal.getName()), HttpStatus.OK);
     }
 

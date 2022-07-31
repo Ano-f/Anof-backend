@@ -148,7 +148,10 @@ public class ProductService {
 
         String str = responseEntity.getBody();
         String[] productId_arr = str.split(",");
-
+        System.out.println("------------------------");
+        for(int i=0;i<productId_arr.length;i++) {
+            System.out.println(productId_arr[i]);
+        }
         List<ProductResponse.productResponse> productList = new ArrayList<>();
 
         for(String productId : productId_arr) {
