@@ -1,59 +1,69 @@
 package com.shinsunsu.anofspring.dto.response;
 
 import com.shinsunsu.anofspring.domain.Product;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
 public class ProductResponse {
 
-    Long id;
-    String name;
-    String type;
-    String brand;
-    String rawMaterial;
-    String natrium;
-    String carbohydrates;
-    String sugar;
-    String fat;
-    String trans_fat;
-    String saturated_fat;
-    String cholesterol;
-    String protein;
-    String calorie;
-    String capacity;
-    String image;
-    String barcode;
+    @Getter
+    @AllArgsConstructor
+    public static class productResponse {
+        private Long id;
+        private String name;
+        private String type;
+        private String brand;
+        private String image;
 
-    public static ProductResponse productResponse(Product product) {
-        return ProductResponse.builder()
-                .id(product.getId())
-                .name(product.getName())
-                .type(product.getType())
-                .brand(product.getBrand())
-                .image(product.getImage())
-                .build();
+        public productResponse(Product product) {
+            this.id = product.getId();
+            this.name = product.getName();
+            this.type = product.getType();
+            this.brand = product.getBrand();
+            this.image = product.getImage();
+        }
     }
 
-    public static ProductResponse productDetailResponse(Product product) {
-        return ProductResponse.builder()
-                .name(product.getName())
-                .type(product.getType())
-                .brand(product.getBrand())
-                .rawMaterial(product.getRawMaterial())
-                .natrium(product.getNatrium())
-                .carbohydrates(product.getCarbohydrates())
-                .sugar(product.getSugar())
-                .fat(product.getFat())
-                .trans_fat(product.getTrans_fat())
-                .saturated_fat(product.getSaturated_fat())
-                .cholesterol(product.getCholesterol())
-                .protein(product.getProtein())
-                .calorie(product.getCalorie())
-                .capacity(product.getCapacity())
-                .image(product.getImage())
-                .barcode(product.getBarcode())
-                .build();
+    @Getter
+    @AllArgsConstructor
+    public static class productDetailResponse {
+        private Long id;
+        private String name;
+        private String type;
+        private String brand;
+        private String rawMaterial;
+        private String natrium;
+        private String carbohydrates;
+        private String sugar;
+        private String fat;
+        private String trans_fat;
+        private String saturated_fat;
+        private String cholesterol;
+        private String protein;
+        private String calorie;
+        private String capacity;
+        private String image;
+        private String barcode;
+
+        public productDetailResponse(Product product) {
+            this.id = product.getId();
+            this.name = product.getName();
+            this.type = product.getType();
+            this.brand = product.getBrand();
+            this.rawMaterial = product.getRawMaterial();
+            this.natrium = product.getNatrium();
+            this.carbohydrates = product.getCarbohydrates();
+            this.sugar = product.getSugar();
+            this.fat = product.getFat();
+            this.trans_fat = product.getTrans_fat();
+            this.saturated_fat = product.getSaturated_fat();
+            this.cholesterol = product.getCholesterol();
+            this.protein = product.getProtein();
+            this.calorie = product.getCalorie();
+            this.capacity = product.getCapacity();
+            this.image = product.getImage();
+            this.barcode = product.getBarcode();
+        }
     }
 }

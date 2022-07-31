@@ -14,7 +14,7 @@ public class LikeProduct {
     private Long id;
 
     @Column(nullable = false)
-    private int isDelete; //선호 식품에서 삭제할 경우 1
+    private int isSelect; //선호 식품에서 삭제한 경우 0
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId", nullable = false)
@@ -26,7 +26,7 @@ public class LikeProduct {
 
     public LikeProduct() {}
     public LikeProduct(int i, User user, Product product) {
-        this.isDelete = i;
+        this.isSelect = i;
         this.user = user;
         this.product = product;
     }

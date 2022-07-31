@@ -22,4 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select new com.shinsunsu.anofspring.dto.CustomUserIngredientDto(u.ingredient) from User u where u.userId = :userId")
     CustomUserIngredientDto findIngredient(@Param("userId") String userId);
+
+    @Query("select u.id from User u where u.userId = :userId")
+    Long findIdByUserId(@Param("userId") String userId);
 }

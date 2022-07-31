@@ -1,8 +1,11 @@
 package com.shinsunsu.anofspring.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shinsunsu.anofspring.domain.Product;
 
 import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.dto.FlaskDto;
 import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.exception.product.ProductException;
@@ -11,9 +14,12 @@ import com.shinsunsu.anofspring.repository.RegisterProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,9 +33,6 @@ public class ProductService {
     @Autowired private ProductRepository productRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private RegisterProductRepository registerProductRepository;
-
-    //@Value("${flask.url}")
-    //private final String url;
 
     //식품Id로 식품이 db에 있는지 확인
     @Transactional(readOnly = true)
@@ -52,14 +55,17 @@ public class ProductService {
 
     //상품명 검색 -> 상품 리스트 제공
     @Transactional(readOnly = true)
-    public List<ProductResponse> search(String keyword) {
+    public List<ProductResponse.productResponse> search(String keyword) {
+
         List<Product> products = productRepository.findByNameContaining(keyword)
                 .orElseThrow(() -> new ProductException("상품이 존재하지 않습니다."));
-        List<ProductResponse> productList = new ArrayList<>();
+
+        List<ProductResponse.productResponse> productList = new ArrayList<>();
 
         for (Product product : products) {
-            productList.add(ProductResponse.productResponse(product));
+            productList.add(new ProductResponse.productResponse(product));
         }
+
         return productList;
     }
 
@@ -118,4 +124,38 @@ public class ProductService {
 
         return custom;
     }
+
+    @Transactional //식품 추천
+    public List recommend(String userId) throws JsonProcessingException {
+        //헤더 설정
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        // Object Mapper를 통한 JSON 바인딩
+        FlaskDto.request flaskDto = new FlaskDto.request();
+        System.out.println(userId);
+        flaskDto.setUserId(userRepository.findIdByUserId(userId));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String params = objectMapper.writeValueAsString(flaskDto);
+
+        // HttpEntity에 헤더 및 params 설정
+        HttpEntity entity = new HttpEntity(params, httpHeaders);
+
+        // RestTemplate의 exchange 메소드를 통해 URL에 HttpEntity와 함께 요청
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:5005/recommend", HttpMethod.POST,
+                entity, String.class);
+
+        String str = responseEntity.getBody();
+        String[] productId_arr = str.split(",");
+
+        List<ProductResponse.productResponse> productList = new ArrayList<>();
+
+        for(String productId : productId_arr) {
+            productList.add(new ProductResponse.productResponse(productRepository.findById(Long.parseLong(productId))
+                    .orElseThrow(() -> new ProductException("존재하지 않는 상품입니다"))));
+        }
+        return productList;
+    }
+
 }

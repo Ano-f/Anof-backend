@@ -25,7 +25,7 @@ public class DislikeProductController {
     }
 
     @PostMapping("/list")
-    public ResponseEntity<List<ProductResponse>> listDislikeProduct(Principal principal) {
+    public ResponseEntity<List<ProductResponse.productResponse>> listDislikeProduct(Principal principal) {
         return new ResponseEntity<>(dislikeProductService.listDislikeProduct(principal.getName()), HttpStatus.OK);
     }
 }
