@@ -1,4 +1,4 @@
-package com.shinsunsu.anofspring.dto;
+package com.shinsunsu.anofspring.dto.response;
 
 import com.shinsunsu.anofspring.domain.Allergy;
 import com.shinsunsu.anofspring.domain.Product;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CustomAllergyDto {
+public class CustomAllergyResponse {
     int wheat;
     int milk;
     int buckwheat;
@@ -29,7 +29,7 @@ public class CustomAllergyDto {
     int shellfish;
     int egg;
 
-    public CustomAllergyDto(Allergy allergy) {
+    public CustomAllergyResponse(Allergy allergy) {
         this.wheat = allergy.getWheat();
         this.milk = allergy.getMilk();
         this.buckwheat = allergy.getBuckwheat();
@@ -49,7 +49,7 @@ public class CustomAllergyDto {
         this.egg = allergy.getEgg();
     }
 
-    public CustomAllergyDto(Product product) {
+    public CustomAllergyResponse(Product product) {
         this.wheat = product.getWheat();
         this.milk = product.getMilk();
         this.buckwheat = product.getBuckwheat();
