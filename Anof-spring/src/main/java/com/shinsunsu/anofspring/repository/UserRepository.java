@@ -17,10 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByNickname(String nickname);
     Optional<User> findByUserId(String UserId);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyResponse(u.allergy) from User u where u.userId = :userId")
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomAllergyResponse(u.allergy) from User u where u.userId = :userId")
     CustomAllergyResponse findAllergy(@Param("userId") String userId);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomUserIngredientResponse(u.ingredient) from User u where u.userId = :userId")
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomUserIngredientResponse(u.ingredient) from User u where u.userId = :userId")
     CustomUserIngredientResponse findIngredient(@Param("userId") String userId);
 
     @Query("select u.id from User u where u.userId = :userId")

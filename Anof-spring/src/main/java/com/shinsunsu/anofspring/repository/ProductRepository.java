@@ -21,15 +21,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<List<Product>> findByNameContaining(@Param("keyword") String keyword);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyResponse(p) from Product p where p.name = :name")
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomAllergyResponse(p) from Product p where p.name = :name")
     CustomAllergyResponse findAllergyByName(@Param("name") String name);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyResponse(p) from Product p where p.barcode = :barcode")
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomAllergyResponse(p) from Product p where p.barcode = :barcode")
     CustomAllergyResponse findAllergyByBarcode(@Param("barcode") String barcode);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomProductIngredientResponse(p) from Product p where p.name = :name")
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomProductIngredientResponse(p) from Product p where p.name = :name")
     CustomProductIngredientResponse findIngredientByName(@Param("name") String name);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomProductIngredientResponse(p) from Product p where p.barcode = :barcode")
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomProductIngredientResponse(p) from Product p where p.barcode = :barcode")
     CustomProductIngredientResponse findIngredientByBarcode(@Param("barcode") String barcode);
 }
