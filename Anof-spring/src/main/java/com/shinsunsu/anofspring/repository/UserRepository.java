@@ -1,8 +1,8 @@
 package com.shinsunsu.anofspring.repository;
 
 import com.shinsunsu.anofspring.domain.User;
-import com.shinsunsu.anofspring.dto.CustomAllergyDto;
-import com.shinsunsu.anofspring.dto.CustomUserIngredientDto;
+import com.shinsunsu.anofspring.dto.response.CustomAllergyResponse;
+import com.shinsunsu.anofspring.dto.response.CustomUserIngredientResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,11 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByNickname(String nickname);
     Optional<User> findByUserId(String UserId);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyDto(u.allergy) from User u where u.userId = :userId")
-    CustomAllergyDto findAllergy(@Param("userId") String userId);
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomAllergyResponse(u.allergy) from User u where u.userId = :userId")
+    CustomAllergyResponse findAllergy(@Param("userId") String userId);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomUserIngredientDto(u.ingredient) from User u where u.userId = :userId")
-    CustomUserIngredientDto findIngredient(@Param("userId") String userId);
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomUserIngredientResponse(u.ingredient) from User u where u.userId = :userId")
+    CustomUserIngredientResponse findIngredient(@Param("userId") String userId);
 
     @Query("select u.id from User u where u.userId = :userId")
     Long findIdByUserId(@Param("userId") String userId);

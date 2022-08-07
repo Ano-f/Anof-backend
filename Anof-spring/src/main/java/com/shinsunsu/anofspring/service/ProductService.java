@@ -103,9 +103,10 @@ public class ProductService {
         Map<String, Integer> allergy = new HashMap<>();
 
         int i = 0;
-        for(int a : userAllergy) {
-            if(a==1) {
-                allergy.put(customAllergy[i], productAllergy.get(i));
+        for (int a : userAllergy) {
+            if (a == 1) {
+                if(productAllergy.get(i) == 1) allergy.put(customAllergy[i], 1);
+                //allergy.put(customAllergy[i], productAllergy.get(i));
             }
             i++;
         }
@@ -151,7 +152,7 @@ public class ProductService {
         RestTemplate restTemplate = new RestTemplate();
 
         //url주소 flask배포 주소로 변경 예정
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:5005/recommend", HttpMethod.POST,
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://52.79.134.110:5005/recommend", HttpMethod.POST,
                 entity, String.class);
 
         String str = responseEntity.getBody();

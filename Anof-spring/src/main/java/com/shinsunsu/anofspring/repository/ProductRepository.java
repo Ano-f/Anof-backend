@@ -1,8 +1,8 @@
 package com.shinsunsu.anofspring.repository;
 
 import com.shinsunsu.anofspring.domain.Product;
-import com.shinsunsu.anofspring.dto.CustomAllergyDto;
-import com.shinsunsu.anofspring.dto.CustomProductIngredientDto;
+import com.shinsunsu.anofspring.dto.response.CustomAllergyResponse;
+import com.shinsunsu.anofspring.dto.response.CustomProductIngredientResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,15 +21,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<List<Product>> findByNameContaining(@Param("keyword") String keyword);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyDto(p) from Product p where p.name = :name")
-    CustomAllergyDto findAllergyByName(@Param("name") String name);
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomAllergyResponse(p) from Product p where p.name = :name")
+    CustomAllergyResponse findAllergyByName(@Param("name") String name);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomAllergyDto(p) from Product p where p.barcode = :barcode")
-    CustomAllergyDto findAllergyByBarcode(@Param("barcode") String barcode);
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomAllergyResponse(p) from Product p where p.barcode = :barcode")
+    CustomAllergyResponse findAllergyByBarcode(@Param("barcode") String barcode);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomProductIngredientDto(p) from Product p where p.name = :name")
-    CustomProductIngredientDto findIngredientByName(@Param("name") String name);
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomProductIngredientResponse(p) from Product p where p.name = :name")
+    CustomProductIngredientResponse findIngredientByName(@Param("name") String name);
 
-    @Query("select new com.shinsunsu.anofspring.dto.CustomProductIngredientDto(p) from Product p where p.barcode = :barcode")
-    CustomProductIngredientDto findIngredientByBarcode(@Param("barcode") String barcode);
+    @Query("select new com.shinsunsu.anofspring.dto.response.CustomProductIngredientResponse(p) from Product p where p.barcode = :barcode")
+    CustomProductIngredientResponse findIngredientByBarcode(@Param("barcode") String barcode);
 }

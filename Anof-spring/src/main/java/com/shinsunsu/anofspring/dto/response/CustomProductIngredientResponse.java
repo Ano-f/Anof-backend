@@ -1,4 +1,4 @@
-package com.shinsunsu.anofspring.dto;
+package com.shinsunsu.anofspring.dto.response;
 
 import com.shinsunsu.anofspring.domain.Product;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CustomProductIngredientDto {
+public class CustomProductIngredientResponse {
     String natrium;
     String carbohydrates;
     String sugar;
@@ -20,7 +20,7 @@ public class CustomProductIngredientDto {
     String protein;
     String calorie;
 
-    public CustomProductIngredientDto(Product product) {
+    public CustomProductIngredientResponse(Product product) {
         this.natrium = product.getNatrium();
         this.carbohydrates = product.getCarbohydrates();
         this.sugar = product.getSugar();
