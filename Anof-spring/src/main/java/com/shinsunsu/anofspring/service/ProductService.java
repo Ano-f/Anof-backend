@@ -103,9 +103,10 @@ public class ProductService {
         Map<String, Integer> allergy = new HashMap<>();
 
         int i = 0;
-        for(int a : userAllergy) {
-            if(a==1) {
-                allergy.put(customAllergy[i], productAllergy.get(i));
+        for (int a : userAllergy) {
+            if (a == 1) {
+                if(productAllergy.get(i) == 1) allergy.put(customAllergy[i], 1);
+                //allergy.put(customAllergy[i], productAllergy.get(i));
             }
             i++;
         }
