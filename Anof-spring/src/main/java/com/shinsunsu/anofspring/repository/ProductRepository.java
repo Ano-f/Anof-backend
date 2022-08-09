@@ -32,4 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select new com.shinsunsu.anofspring.dto.response.CustomProductIngredientResponse(p) from Product p where p.barcode = :barcode")
     CustomProductIngredientResponse findIngredientByBarcode(@Param("barcode") String barcode);
+
+    @Query(value = "SELECT * FROM Product p order by RAND() limit 5",nativeQuery = true)
+    List<Product> findProductByRandom();
 }

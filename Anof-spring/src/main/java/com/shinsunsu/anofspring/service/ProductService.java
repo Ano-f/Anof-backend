@@ -20,19 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @RequiredArgsConstructor
 @Service
 public class ProductService {
 
-    @Autowired private ProductRepository productRepository;
-    @Autowired private UserRepository userRepository;
-    @Autowired private RegisterProductRepository registerProductRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RegisterProductRepository registerProductRepository;
 
     //식품Id로 식품이 db에 있는지 확인
     @Transactional(readOnly = true)
@@ -86,13 +86,15 @@ public class ProductService {
         List<Integer> productAllergy = new ArrayList<>();
         List<String> productIngredient = new ArrayList<>();
         Product product = new Product();
-        if(map.containsKey("barcode")) {
-            if(!productRepository.existsByBarcode(map.get("barcode"))) {throw new ProductException("존재하지 않는 상품입니다");}
+        if (map.containsKey("barcode")) {
+            if (!productRepository.existsByBarcode(map.get("barcode"))) {
+                throw new ProductException("존재하지 않는 상품입니다");
+            }
             productAllergy = productRepository.findAllergyByBarcode(map.get("barcode")).CustomAllergy();
             productIngredient = productRepository.findIngredientByBarcode(map.get("barcode")).CustomIngredient();
             product = productRepository.findByBarcode(map.get("barcode"));
         }
-        if(map.containsKey("name")) {
+        if (map.containsKey("name")) {
             productAllergy = productRepository.findAllergyByName(map.get("name")).CustomAllergy();
             productIngredient = productRepository.findIngredientByName(map.get("name")).CustomIngredient();
             product = productRepository.findByName(map.get("name"));
@@ -104,9 +106,8 @@ public class ProductService {
 
         int i = 0;
         for (int a : userAllergy) {
-            if (a == 1) {
-                if(productAllergy.get(i) == 1) allergy.put(customAllergy[i], 1);
-                //allergy.put(customAllergy[i], productAllergy.get(i));
+            if (a == 1 && productAllergy.get(i) == 1) {
+                allergy.put(customAllergy[i], 1);
             }
             i++;
         }
@@ -115,9 +116,9 @@ public class ProductService {
 
         Map<String, String> ingredient = new HashMap<>();
 
-        i= 0;
-        for(int a : userIngredient) {
-            if(a==1) ingredient.put(customIngredient[i], productIngredient.get(i));
+        i = 0;
+        for (int a : userIngredient) {
+            if (a == 1) ingredient.put(customIngredient[i], productIngredient.get(i));
             i++;
         }
 
@@ -151,18 +152,27 @@ public class ProductService {
         // RestTemplate의 exchange 메소드를 통해 URL에 HttpEntity와 함께 요청
         RestTemplate restTemplate = new RestTemplate();
 
-        //url주소 flask배포 주소로 변경 예정
+        //url주소 flask배포 주소로 변경 예정 "http://52.79.134.110:5005/recommend"
         ResponseEntity<String> responseEntity = restTemplate.exchange("http://52.79.134.110:5005/recommend", HttpMethod.POST,
                 entity, String.class);
 
         String str = responseEntity.getBody();
-        String[] productId_arr = str.split(",");
-
+        System.out.println(str);
         List<ProductResponse.productResponse> productList = new ArrayList<>();
 
-        for(String productId : productId_arr) {
-            productList.add(new ProductResponse.productResponse(productRepository.findById(Long.parseLong(productId))
-                    .orElseThrow(() -> new ProductException("존재하지 않는 상품입니다"))));
+        if(str.equals("0")) {
+            for (Product product : productRepository.findProductByRandom()){
+                productList.add(new ProductResponse.productResponse(product));
+            }
+        }
+
+        else{
+            String[] productId_arr = str.split(",");
+
+            for (String productId : productId_arr) {
+                productList.add(new ProductResponse.productResponse(productRepository.findById(Long.parseLong(productId))
+                        .orElseThrow(() -> new ProductException("존재하지 않는 상품입니다"))));
+            }
         }
         return productList;
     }
