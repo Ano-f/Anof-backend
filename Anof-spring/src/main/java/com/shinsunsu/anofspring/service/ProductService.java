@@ -157,7 +157,6 @@ public class ProductService {
                 entity, String.class);
 
         String str = responseEntity.getBody();
-        System.out.println(str);
         List<ProductResponse.productResponse> productList = new ArrayList<>();
 
         if(str.equals("0")) {
