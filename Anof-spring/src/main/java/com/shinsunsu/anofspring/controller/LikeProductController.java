@@ -23,7 +23,7 @@ public class LikeProductController {
         return new ResponseEntity(likeProductService.likeProduct(productId, principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     public ResponseEntity<List<ProductResponse.productResponse>> listLikeProduct(Principal principal) {
         return new ResponseEntity<>(likeProductService.listLikeProduct(principal.getName()), HttpStatus.OK);
     }
