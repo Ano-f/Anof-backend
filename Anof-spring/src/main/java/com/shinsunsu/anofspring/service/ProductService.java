@@ -69,14 +69,16 @@ public class ProductService {
         return productList;
     }
 
-    @Transactional //상품 등록
+    //상품 등록
+    @Transactional
     public boolean registerProduct(RegisterProductRequest request, String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow();
         registerProductRepository.save(RegisterProductRequest.RegisterProduct(request, user));
         return true;
     }
 
-    @Transactional //맞춤 정보
+    //맞춤 정보
+    @Transactional
     public Map<String, Object> customInfo(Map<String, String> map, String userId) {
         String[] customAllergy = {"wheat", "milk", "buckwheat", "peanut", "soybean", "mackerel", "crab", "shrimp", "pork", "peach", "tomato",
                 "walnut", "chicken", "beef", "squid", "shellfish", "egg"};
@@ -133,7 +135,8 @@ public class ProductService {
         return custom;
     }
 
-    @Transactional //식품 추천
+    //식품 추천
+    @Transactional
     public List recommend(String userId) throws JsonProcessingException {
         //헤더 설정
         HttpHeaders httpHeaders = new HttpHeaders();

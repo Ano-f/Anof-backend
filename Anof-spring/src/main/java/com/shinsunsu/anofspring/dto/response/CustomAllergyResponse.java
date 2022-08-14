@@ -69,8 +69,8 @@ public class CustomAllergyResponse {
         this.egg = product.getEgg();
     }
 
-    public List CustomAllergy() {
-        List allergyList = new ArrayList<>();
+    public List<Integer> CustomAllergy() {
+        List<Integer> allergyList = new ArrayList<>();
         allergyList.add(wheat);
         allergyList.add(milk);
         allergyList.add(buckwheat);
