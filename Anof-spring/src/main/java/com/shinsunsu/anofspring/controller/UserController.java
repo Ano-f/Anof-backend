@@ -1,24 +1,17 @@
 package com.shinsunsu.anofspring.controller;
 
 import com.shinsunsu.anofspring.config.JwtTokenProvider;
-import com.shinsunsu.anofspring.config.PasswordEncoderConfig;
-import com.shinsunsu.anofspring.domain.Allergy;
-import com.shinsunsu.anofspring.domain.Ingredient;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.UserRequest;
 import com.shinsunsu.anofspring.exception.user.PasswordErrorException;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

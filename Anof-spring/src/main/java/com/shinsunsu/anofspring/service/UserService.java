@@ -1,22 +1,14 @@
 package com.shinsunsu.anofspring.service;
 
-import com.shinsunsu.anofspring.config.PasswordEncoderConfig;
-import com.shinsunsu.anofspring.domain.Allergy;
-import com.shinsunsu.anofspring.domain.Ingredient;
 import com.shinsunsu.anofspring.domain.User;
-import com.shinsunsu.anofspring.dto.request.UserRequest;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor

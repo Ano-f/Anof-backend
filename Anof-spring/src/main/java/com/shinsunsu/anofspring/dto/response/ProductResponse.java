@@ -2,7 +2,6 @@ package com.shinsunsu.anofspring.dto.response;
 
 import com.shinsunsu.anofspring.domain.Product;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 public class ProductResponse {

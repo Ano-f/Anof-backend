@@ -9,7 +9,6 @@ import com.shinsunsu.anofspring.dto.response.PointDetailResponse;
 import com.shinsunsu.anofspring.exception.mypage.DangerIngredientException;
 import com.shinsunsu.anofspring.repository.DislikeProductRepository;
 import com.shinsunsu.anofspring.repository.PointDetailRepository;
-import com.shinsunsu.anofspring.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,7 +76,7 @@ public class MypageService {
         for(PointDetail pointDetail : pointDetailList) {
             pointDetailResponseList.add(PointDetailResponse.pointDetailResponse(pointDetail));
         }
-        
+
         Collections.reverse(pointDetailResponseList);
 
         return pointDetailResponseList;
