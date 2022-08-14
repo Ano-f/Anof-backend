@@ -1,7 +1,6 @@
 package com.shinsunsu.anofspring.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.shinsunsu.anofspring.domain.Product;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
@@ -46,8 +45,8 @@ public class ProductController {
 
     //상품 등록 요청
     @PostMapping("/requestProduct")
-    public ResponseEntity registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
-        return new ResponseEntity(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
+    public ResponseEntity<Object> registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
+        return new ResponseEntity<>(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
     }
 
     //맞춤 정보 제공
