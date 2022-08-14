@@ -1,11 +1,14 @@
 package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.DislikeProduct;
+import com.shinsunsu.anofspring.domain.PointDetail;
 import com.shinsunsu.anofspring.domain.Product;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.response.CustomAllergyResponse;
+import com.shinsunsu.anofspring.dto.response.PointDetailResponse;
 import com.shinsunsu.anofspring.exception.mypage.DangerIngredientException;
 import com.shinsunsu.anofspring.repository.DislikeProductRepository;
+import com.shinsunsu.anofspring.repository.PointDetailRepository;
 import com.shinsunsu.anofspring.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ public class MypageService {
     @Autowired
     private DislikeProductRepository dislikeProductRepository;
     @Autowired
-    private ProductRepository productRepository;
+    private PointDetailRepository pointDetailRepository;
 
     //위험 성분 분석
     @Transactional(readOnly = true)
@@ -36,6 +39,7 @@ public class MypageService {
         for (DislikeProduct dislikeProduct : dislikeProductList) {
             products.add(dislikeProduct.getProduct());
         }
+
         Map<String, Integer> dangerIngredientCount = new HashMap<>();
         for(Product product : products) {
             List<Integer> productAllergy = new CustomAllergyResponse(product).CustomAllergy();
@@ -61,6 +65,22 @@ public class MypageService {
         }
 
         return dangerIngredientCount;
+
+    }
+
+    //포인트 적립 내역
+    @Transactional(readOnly = true)
+    public List<PointDetailResponse> getPointDetail(User user) {
+        List<PointDetail> pointDetailList = pointDetailRepository.findByUser(user);
+        List<PointDetailResponse> pointDetailResponseList = new ArrayList<>();
+
+        for(PointDetail pointDetail : pointDetailList) {
+            pointDetailResponseList.add(PointDetailResponse.pointDetailResponse(pointDetail));
+        }
+        
+        Collections.reverse(pointDetailResponseList);
+
+        return pointDetailResponseList;
 
     }
 }
