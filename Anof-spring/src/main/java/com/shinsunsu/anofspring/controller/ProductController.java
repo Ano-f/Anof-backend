@@ -36,14 +36,13 @@ public class ProductController {
     }
 
     //키워드로 식품 리스트 검색
-    //상품Id, 상품명, 이미지, type, brand 제외 모두 null로 가는데 product 전체 정보를 다 보내고 프론트에서 뽑아쓰는게 좋은지
     @GetMapping("/search/{keyword}")
     public ResponseEntity<List<ProductResponse.productResponse>> searchByKeyword(@PathVariable String keyword, Principal principal) {
         User user = userService.loadUserByUsername(principal.getName());
         return new ResponseEntity<>(productService.search(keyword), HttpStatus.OK);
     }
 
-    //상품 등록 요청
+    //식품 등록 요청
     @PostMapping("/requestProduct")
     public ResponseEntity<Object> registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
         return new ResponseEntity<>(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
@@ -55,9 +54,9 @@ public class ProductController {
         return new ResponseEntity<>(productService.customInfo(map, principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping("/recommend") //get으로 바꾸기 가능?
+    //식품 추천
+    @PostMapping("/recommend")
     public ResponseEntity<Object> recommend(Principal principal) throws JsonProcessingException {
-        System.out.println(principal.getName());
         return new ResponseEntity<>(productService.recommend(principal.getName()), HttpStatus.OK);
     }
 
