@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -33,7 +30,7 @@ public class MypageService {
                 "walnut", "chicken", "beef", "squid", "shellfish", "egg"};
 
         List<DislikeProduct> dislikeProductList =  dislikeProductRepository.findByUserAndIsSelect(user, 1);
-        if (dislikeProductList.size() < 7) throw new DangerIngredientException("분석하기에 비선호 식품 개수가 부족합니다.");
+        if (dislikeProductList.size() < 10) throw new DangerIngredientException("분석하기에 비선호 식품 개수가 부족합니다.");
 
         List<Product> products = new ArrayList<>();
         for (DislikeProduct dislikeProduct : dislikeProductList) {
@@ -45,26 +42,24 @@ public class MypageService {
             int i = 0;
             for(int a: productAllergy){
                 if(a==1 & dangerIngredientCount.get(customAllergy[i]) == null) dangerIngredientCount.put(customAllergy[i], 1);
-                else if(a==1){
-                    System.out.println("현재 알러지: " +customAllergy[i]);
-                    dangerIngredientCount.replace(customAllergy[i], dangerIngredientCount.get(customAllergy[i])+1);
-                }
+                else if(a==1) dangerIngredientCount.replace(customAllergy[i], dangerIngredientCount.get(customAllergy[i])+1);
                 i++;
             }
-            System.out.println("총 milk:" +dangerIngredientCount.get("milk"));
-//            for (int a=0; a<productAllergy.size();a++) {
-//                System.out.println("1: "+customAllergy[i]);
-//                if (productAllergy.get(a).equals(1) & (dangerIngredientCount.get(customAllergy[i]) == null)) {
-//                    System.out.println(customAllergy[i]);
-//                    dangerIngredientCount.put(customAllergy[i], 1);
-//                    System.out.println(dangerIngredientCount.get(customAllergy[i]));
-//                }
-//
-//            }
-
-            //count 결과 3이하인 애들은 버리기 + value 기준으로 정렬
-
         }
+
+        //value 기준으로 정렬
+        List<String> listKeySet = new ArrayList<>(dangerIngredientCount.keySet());
+        Collections.sort(listKeySet, (value1, value2) -> (dangerIngredientCount.get(value2).compareTo(dangerIngredientCount.get(value1))));
+
+        for(String key : listKeySet) {
+            System.out.println("key : " + key + " , " + "value : " + dangerIngredientCount.get(key));
+        }
+
+        //count 결과 3미만인 애들은 버리기
+        for(String key : listKeySet) {
+            if(dangerIngredientCount.get(key)<3) dangerIngredientCount.remove(key);
+        }
+
         return dangerIngredientCount;
 
     }

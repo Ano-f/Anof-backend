@@ -86,7 +86,7 @@ public class ProductService {
                 "calorie"};
 
         List<Integer> productAllergy = new ArrayList<>();
-        List<String> productIngredient = new ArrayList<>();
+        List productIngredient = new ArrayList<>();
         Product product = new Product();
         if (map.containsKey("barcode")) {
             if (!productRepository.existsByBarcode(map.get("barcode"))) {
@@ -120,7 +120,7 @@ public class ProductService {
 
         i = 0;
         for (int a : userIngredient) {
-            if (a == 1) ingredient.put(customIngredient[i], productIngredient.get(i));
+            if (a == 1) ingredient.put(customIngredient[i], (String) productIngredient.get(i));
             i++;
         }
 

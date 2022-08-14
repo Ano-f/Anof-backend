@@ -28,7 +28,7 @@ public class MypageController {
         User user = userService.loadUserByUsername(principal.getName());
 
         Map<String, Integer> md = mypageService.getDangerIngredient(user); //공통 알러지 카운트 한 것(1도 포함됨)
-
+        System.out.println(md.size());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
