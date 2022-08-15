@@ -16,9 +16,9 @@ import java.util.List;
 @RequestMapping("/likeproduct")
 public class LikeProductController {
 
-    @Autowired private LikeProductService likeProductService;
+    private final LikeProductService likeProductService;
 
-    @GetMapping("/{productId}")
+    @PutMapping("/{productId}")
     public ResponseEntity saveLikeProduct(@PathVariable Long productId, Principal principal){
         return new ResponseEntity(likeProductService.likeProduct(productId, principal.getName()), HttpStatus.OK);
     }

@@ -13,18 +13,17 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/dislikeprocut")
+@RequestMapping("/dislikeproduct")
 public class DislikeProductController {
 
-    @Autowired
-    private DislikeProductService dislikeProductService;
+    private final DislikeProductService dislikeProductService;
 
-    @GetMapping("/{productId}")
+    @PutMapping("/{productId}")
     public ResponseEntity saveDislikeProduct(@PathVariable Long productId, Principal principal){
         return new ResponseEntity(dislikeProductService.dislikeProduct(productId, principal.getName()), HttpStatus.OK);
     }
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     public ResponseEntity<List<ProductResponse.productResponse>> listDislikeProduct(Principal principal) {
         return new ResponseEntity<>(dislikeProductService.listDislikeProduct(principal.getName()), HttpStatus.OK);
     }

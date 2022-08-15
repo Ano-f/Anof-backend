@@ -20,10 +20,9 @@ import java.util.List;
 @Service
 public class DislikeProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired private UserRepository userRepository;
-    @Autowired private DislikeProductRepository dislikeProductRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final DislikeProductRepository dislikeProductRepository;
 
     @Transactional
     public boolean dislikeProduct(Long productId, String id) {
