@@ -20,9 +20,9 @@ import java.util.List;
 @Service
 public class LikeProductService {
 
-    @Autowired private ProductRepository productRepository;
-    @Autowired private UserRepository userRepository;
-    @Autowired private LikeProductRepository likeProductRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final LikeProductRepository likeProductRepository;
 
     @Transactional
     public boolean likeProduct(Long productId, String id) {

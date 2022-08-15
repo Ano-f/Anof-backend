@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class MypageController {
     @Autowired private MypageService mypageService;
 
     //위험 성분 분석
-    @PostMapping("/danger")
+    @GetMapping("/danger")
     public ResponseEntity<Object> getDangerIngredient(Principal principal) {
         User user = userService.loadUserByUsername(principal.getName());
 
@@ -34,7 +35,7 @@ public class MypageController {
     }
 
     //포인트 적립 내역
-    @PostMapping("/pointdetail")
+    @GetMapping("/pointdetail")
     public ResponseEntity<List<PointDetailResponse>> getPointDetail(Principal principal) {
         User user = userService.loadUserByUsername(principal.getName());
         return new ResponseEntity<>(mypageService.getPointDetail(user), HttpStatus.OK);
