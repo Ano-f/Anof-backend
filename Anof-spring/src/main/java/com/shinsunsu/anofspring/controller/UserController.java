@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<Object> join(@RequestBody UserRequest user) {
         User newUser = userService.join(UserRequest.newUser(user, passwordEncoder.encode(user.getPassword()),user.getAllergy(), user.getIngredient()));
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
     //유저 로그인 아이디 중복 체크

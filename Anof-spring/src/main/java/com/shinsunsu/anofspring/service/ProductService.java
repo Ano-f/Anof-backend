@@ -27,12 +27,9 @@ import java.util.*;
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RegisterProductRepository registerProductRepository;
+    private final ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final RegisterProductRepository registerProductRepository;
 
     //식품Id로 식품이 db에 있는지 확인
     @Transactional(readOnly = true)
@@ -65,7 +62,6 @@ public class ProductService {
         for (Product product : products) {
             productList.add(new ProductResponse.productResponse(product));
         }
-
         return productList;
     }
 
@@ -103,14 +99,17 @@ public class ProductService {
         }
 
         List<Integer> userAllergy = userRepository.findAllergy(userId).CustomAllergy();
-
         Map<String, Integer> allergy = new HashMap<>();
 
         int i = 0;
+        for(int k : productAllergy) {
+            if(k == 1)  allergy.put(customAllergy[i],0);
+            i++;
+        }
+
+        i = 0;
         for (int a : userAllergy) {
-            if (a == 1 && productAllergy.get(i) == 1) {
-                allergy.put(customAllergy[i], 1);
-            }
+            if (a == 1) allergy.replace(customAllergy[i], 1);
             i++;
         }
 
