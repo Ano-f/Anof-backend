@@ -45,7 +45,7 @@ public class ProductController {
     //식품 등록 요청
     @PostMapping("/requestProduct")
     public ResponseEntity<Object> registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
-        return new ResponseEntity<>(productService.registerProduct(request, principal.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(productService.registerProduct(request, principal.getName()), HttpStatus.CREATED);
     }
 
     //맞춤 정보 제공

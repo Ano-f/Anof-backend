@@ -21,8 +21,8 @@ import java.util.Map;
 @RequestMapping("/mypage")
 public class MypageController {
 
-    @Autowired private UserService userService;
-    @Autowired private MypageService mypageService;
+    private final UserService userService;
+    private final MypageService mypageService;
 
     //위험 성분 분석
     @GetMapping("/danger")
