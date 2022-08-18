@@ -1,17 +1,16 @@
 package com.shinsunsu.anofspring.controller;
 
 import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.dto.request.updateUserRequest;
 import com.shinsunsu.anofspring.dto.response.PointDetailResponse;
+import com.shinsunsu.anofspring.dto.response.UserResponse;
 import com.shinsunsu.anofspring.service.MypageService;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -41,4 +40,17 @@ public class MypageController {
         return new ResponseEntity<>(mypageService.getPointDetail(user), HttpStatus.OK);
     }
 
+    //정보 수정 전 사용자 정보 확인
+    @GetMapping("/checkUserInfo")
+    public ResponseEntity<UserResponse.userInfoResponse> getUserInfo(Principal principal) {
+        User user = userService.loadUserByUsername(principal.getName());
+        return new ResponseEntity<>(mypageService.getUserInfo(user), HttpStatus.OK);
+    }
+
+    //사용자 정보 수정
+    @PatchMapping("/updateUser")
+    public ResponseEntity<Boolean> updateUserInfo(@RequestBody updateUserRequest updateInfo, Principal principal) {
+        User user = userService.loadUserByUsername(principal.getName());
+        return new ResponseEntity<>(mypageService.updateUserInfo(updateInfo, user), HttpStatus.OK);
+    }
 }

@@ -1,19 +1,21 @@
 package com.shinsunsu.anofspring.service;
 
-import com.shinsunsu.anofspring.domain.DislikeProduct;
-import com.shinsunsu.anofspring.domain.PointDetail;
-import com.shinsunsu.anofspring.domain.Product;
-import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.domain.*;
+import com.shinsunsu.anofspring.dto.request.updateUserRequest;
 import com.shinsunsu.anofspring.dto.response.CustomAllergyResponse;
+import com.shinsunsu.anofspring.dto.response.CustomUserIngredientResponse;
 import com.shinsunsu.anofspring.dto.response.PointDetailResponse;
+import com.shinsunsu.anofspring.dto.response.UserResponse;
 import com.shinsunsu.anofspring.exception.mypage.DangerIngredientException;
 import com.shinsunsu.anofspring.repository.DislikeProductRepository;
 import com.shinsunsu.anofspring.repository.PointDetailRepository;
+import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -24,6 +26,8 @@ public class MypageService {
     private DislikeProductRepository dislikeProductRepository;
     @Autowired
     private PointDetailRepository pointDetailRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     //위험 성분 분석
     @Transactional(readOnly = true)
@@ -80,6 +84,35 @@ public class MypageService {
         Collections.reverse(pointDetailResponseList);
 
         return pointDetailResponseList;
+
+    }
+
+    //정보 수정 전 사용자 정보 확인
+    @Transactional(readOnly = true)
+    public UserResponse.userInfoResponse getUserInfo(User user) {
+        return new UserResponse.userInfoResponse(user);
+    }
+
+    //사용자 정보 수정
+    @Transactional
+    public boolean updateUserInfo(updateUserRequest updateInfo, User user) {
+
+        if (updateInfo.getAllergy() != null) {
+            if (new CustomAllergyResponse(user.getAllergy()).CustomAllergy()
+                    .equals(new CustomAllergyResponse(updateInfo.getAllergy()).CustomAllergy())) {
+                return false;
+            }
+            else updateInfo.updateAllergy(user.getAllergy(), updateInfo.getAllergy());
+        }
+
+        else {
+            if (new CustomUserIngredientResponse(user.getIngredient()).CustomIngredient()
+                    .equals(new CustomUserIngredientResponse(updateInfo.getIngredient()).CustomIngredient())) {
+                return false;
+            }
+            else updateInfo.updateIngredient(user.getIngredient(), updateInfo.getIngredient());
+        }
+        return true;
 
     }
 }
