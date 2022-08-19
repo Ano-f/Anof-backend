@@ -38,10 +38,10 @@ public class ProductService {
     }
 
     //식품명으로 식품이 db에 있는지 확인
-    @Transactional(readOnly = true)
-    public boolean checkNameExist(String name) {
-        return productRepository.existsByName(name);
-    }
+//    @Transactional(readOnly = true)
+//    public boolean checkNameExist(String name) {
+//        return productRepository.existsByName(name);
+//    }
 
     //식품명 검색을 통한 상세 정보 제공
     @Transactional(readOnly = true)

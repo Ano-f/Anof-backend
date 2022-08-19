@@ -16,8 +16,7 @@ import java.util.NoSuchElementException;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     //회원가입
     @Transactional
