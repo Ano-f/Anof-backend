@@ -11,23 +11,18 @@ import com.shinsunsu.anofspring.repository.DislikeProductRepository;
 import com.shinsunsu.anofspring.repository.PointDetailRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class MypageService {
 
-    @Autowired
-    private DislikeProductRepository dislikeProductRepository;
-    @Autowired
-    private PointDetailRepository pointDetailRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final DislikeProductRepository dislikeProductRepository;
+    private final PointDetailRepository pointDetailRepository;
+    //private final UserRepository userRepository;
 
     //위험 성분 분석
     @Transactional(readOnly = true)
@@ -54,19 +49,18 @@ public class MypageService {
             }
         }
 
-        //value 기준으로 정렬
+        //value 기준으로 공통 성분이 많이 count된 순으로 정렬
         List<String> listKeySet = new ArrayList<>(dangerIngredientCount.keySet());
         Collections.sort(listKeySet, (value1, value2) -> (dangerIngredientCount.get(value2).compareTo(dangerIngredientCount.get(value1))));
 
+        double totalCount = dangerIngredientCount.size();
         for(String key : listKeySet) {
-            System.out.println("key : " + key + " , " + "value : " + dangerIngredientCount.get(key));
+            if(dangerIngredientCount.get(key)<3) {
+                dangerIngredientCount.remove(key);
+                continue;
+            }
+            dangerIngredientCount.replace(key, (int) (dangerIngredientCount.get(key)/totalCount*100));
         }
-
-        //count 결과 3미만인 애들은 버리기
-        for(String key : listKeySet) {
-            if(dangerIngredientCount.get(key)<3) dangerIngredientCount.remove(key);
-        }
-
         return dangerIngredientCount;
 
     }
