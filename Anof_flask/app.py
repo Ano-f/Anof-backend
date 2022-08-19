@@ -32,7 +32,7 @@ def recommend():
         return similar_users
 
     similar_users = get_similarUsers(userId).sort_values('id_x')
-    likeProduct = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/선호.csv')
+    likeProduct = pd.read_csv('./env/anofdata/선호.csv')
     likeProduct.drop(["id"], axis=1, inplace=True)
     
     
@@ -74,6 +74,9 @@ def recommend():
     response = get_recommendProducts(likeProduct)
     return response
     
+    #현재 allergy, ingredient테이블에 userId가 존재X ->
+    #해결법1: 각 성분 테이블에 userId 추가
+    #해결법2: userId 없는 버전으로 코드 수정
     
 if __name__ == '__main__':
         app.run(host="0.0.0.0", port="5005", debug=True)
