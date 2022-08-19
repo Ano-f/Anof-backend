@@ -11,9 +11,9 @@ app = Flask(__name__)
 def recommend():
     userId = request.get_json().get('userId')
     
-    user = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/유저(id).csv') #./env/anofdata/알레르기 테이블.csv
-    allergy = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/알레르기 테이블.csv')
-    ingredient = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/성분 테이블.csv')
+    user = pd.read_csv('./env/anofdata/유저(id).csv') #./env/anofdata/알레르기 테이블.csv
+    allergy = pd.read_csv('./env/anofdata/알레르기 테이블.csv')
+    ingredient = pd.read_csv('./env/anofdata/성분 테이블.csv')
     user = pd.merge(user, allergy, left_on='allergyId', right_on='id')
     user = pd.merge(user, ingredient, left_on='IngredientId', right_on='id')
     user.drop(['allergyId', 'IngredientId', 'id_y', 'id'], axis=1, inplace=True)
@@ -76,4 +76,4 @@ def recommend():
     
     
 if __name__ == '__main__':
-    	app.run(port='5005', debug=True)
+        app.run(host="0.0.0.0", port="5005", debug=True)

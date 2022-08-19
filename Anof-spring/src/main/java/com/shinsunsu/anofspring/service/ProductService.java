@@ -155,7 +155,7 @@ public class ProductService {
         RestTemplate restTemplate = new RestTemplate();
 
         //url주소 flask배포 주소로 변경 예정 "http://52.79.134.110:5005/recommend"
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:5005/recommend", HttpMethod.POST,
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://52.79.134.110:5005/recommend", HttpMethod.POST,
                 entity, String.class);
 
         String str = responseEntity.getBody();
@@ -166,10 +166,8 @@ public class ProductService {
                 productList.add(new ProductResponse.productResponse(product));
             }
         }
-
         else{
             String[] productId_arr = str.split(",");
-
             for (String productId : productId_arr) {
                 productList.add(new ProductResponse.productResponse(productRepository.findById(Long.parseLong(productId))
                         .orElseThrow(() -> new ProductException("존재하지 않는 상품입니다"))));
