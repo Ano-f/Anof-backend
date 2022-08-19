@@ -103,7 +103,7 @@ public class ProductService {
 
         int i = 0;
         for(int k : productAllergy) {
-            if(k == 1)  allergy.put(customAllergy[i],0);
+            if(k == 1) allergy.put(customAllergy[i],0);
             i++;
         }
 

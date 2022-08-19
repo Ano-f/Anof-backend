@@ -7,14 +7,12 @@ import com.shinsunsu.anofspring.dto.response.UserResponse;
 import com.shinsunsu.anofspring.service.MypageService;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,9 +26,7 @@ public class MypageController {
     @GetMapping("/danger")
     public ResponseEntity<Object> getDangerIngredient(Principal principal) {
         User user = userService.loadUserByUsername(principal.getName());
-
-        Map<String, Integer> md = mypageService.getDangerIngredient(user); //공통 알러지 카운트 한 것(1도 포함됨)
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(mypageService.getDangerIngredient(user), HttpStatus.OK);
     }
 
     //포인트 적립 내역

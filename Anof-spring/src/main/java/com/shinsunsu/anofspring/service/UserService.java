@@ -1,6 +1,7 @@
 package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.User;
+import com.shinsunsu.anofspring.exception.user.UserNotFoundException;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     public User findUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저의 아이디입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저의 아이디입니다."));
     }
 
     //토큰 업데이트
