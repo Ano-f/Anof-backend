@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from urllib import response
 from flask import Flask, request
 import json
@@ -10,7 +11,7 @@ app = Flask(__name__)
 @app.route('/recommend', methods=['POST'])
 def recommend():
     userId = request.get_json().get('userId')
-    
+   
     user = pd.read_csv('./env/anofdata/user.csv') #./env/anofdata/알레르기 테이블.csv
     allergy = pd.read_csv('./env/anofdata/userallergystate.csv')
     ingredient = pd.read_csv('./env/anofdata/userIngredientstate.csv')
@@ -35,7 +36,6 @@ def recommend():
     likeProduct = pd.read_csv('./env/anofdata/userlikeproduct.csv')
     likeProduct.drop(["id"], axis=1, inplace=True)
     
-    
     def get_recommendProducts(likeProdcut):
         
         if len(likeProduct.index)==0:
@@ -44,6 +44,7 @@ def recommend():
         products = []
         
         for i in similar_users.index:
+            if (likeProduct['userId']==i).any(): #userId==i가 존재하는 경우 
                 data = likeProduct.loc[likeProduct.userId==i]
                 data = data.pivot_table('isSelect', index='userId', columns='productId')
                 products.append(data.loc[i])
@@ -70,10 +71,8 @@ def recommend():
                 
         return ','.join(str(n) for n in recommendProduct.index.values.tolist())
         
-    
     response = get_recommendProducts(likeProduct)
     return response
-
     
 if __name__ == '__main__':
         app.run(host="0.0.0.0", port="5005", debug=True)
