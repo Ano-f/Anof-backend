@@ -155,7 +155,7 @@ public class ProductService {
         RestTemplate restTemplate = new RestTemplate();
 
         //url주소 flask배포 주소로 변경 예정 "http://52.79.134.110:5005/recommend"
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://52.79.134.110:5005/recommend", HttpMethod.POST,
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:5005/recommend", HttpMethod.POST,
                 entity, String.class);
 
         String str = responseEntity.getBody();
