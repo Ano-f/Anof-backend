@@ -36,9 +36,6 @@ def recommend():
     likeProduct = pd.read_csv('./env/anofdata/userlikeproduct.csv')
     likeProduct.drop(["id"], axis=1, inplace=True)
     
-    print(similar_users)
-    
-    
     def get_recommendProducts(likeProdcut):
         
         if len(likeProduct.index)==0:
@@ -51,8 +48,6 @@ def recommend():
                 data = likeProduct.loc[likeProduct.userId==i]
                 data = data.pivot_table('isSelect', index='userId', columns='productId')
                 products.append(data.loc[i])
-                
-        print(products)
         
         if len(products)==0:
             return "0"
@@ -71,20 +66,13 @@ def recommend():
         recommendProduct = pd.DataFrame(data=arr, index=matrix.columns, columns={'recommend'})
 
         recommendProduct = recommendProduct.sort_values(by='recommend', ascending=False)[:10]
-        
-        print(recommendProduct)
                 
         recommendProduct.drop(recommendProduct[recommendProduct['recommend']==0].index, inplace=True)
                 
         return ','.join(str(n) for n in recommendProduct.index.values.tolist())
         
-    
     response = get_recommendProducts(likeProduct)
     return response
-    
-    #현재 allergy, ingredient테이블에 userId가 존재X ->
-    #해결법1: 각 성분 테이블에 userId 추가
-    #해결법2: userId 없는 버전으로 코드 수정
     
 if __name__ == '__main__':
         app.run(host="0.0.0.0", port="5005", debug=True)
