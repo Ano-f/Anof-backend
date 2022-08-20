@@ -1,22 +1,20 @@
 package com.shinsunsu.anofspring.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shinsunsu.anofspring.config.JwtTokenProvider;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.UserRequest;
 import com.shinsunsu.anofspring.exception.user.PasswordErrorException;
+import com.shinsunsu.anofspring.service.MainpageService;
+import com.shinsunsu.anofspring.service.ProductService;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.ProviderNotFoundException;
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +25,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private MainpageService mainpageService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -55,7 +57,7 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody UserRequest user) {
+    public ResponseEntity<Object> login(@RequestBody UserRequest user) throws JsonProcessingException {
         User loginUser = userService.loadUserByUsername(user.getUserId());
 
         if (!passwordEncoder.matches(user.getPassword(), loginUser.getPassword())) {
@@ -66,10 +68,12 @@ public class UserController {
         String token = jwtTokenProvider.createToken(loginUser.getUsername(), loginUser.getRoles()); //getUsername -> 유저 아이디 반환
         userService.updateToken(loginUser.getId(), token);
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("token", token);
         map.put("nickname",loginUser.getNickname());
         map.put("userId",loginUser.getUserId());
+        map.put("recommend", productService.recommend(loginUser.getUserId()));
+        map.put("article", mainpageService.getArticle(loginUser.getUserId())); //맞춤 기사
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }

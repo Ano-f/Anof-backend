@@ -13,7 +13,6 @@ import com.shinsunsu.anofspring.repository.ProductRepository;
 import com.shinsunsu.anofspring.repository.RegisterProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -154,7 +153,7 @@ public class ProductService {
         // RestTemplate의 exchange 메소드를 통해 URL에 HttpEntity와 함께 요청
         RestTemplate restTemplate = new RestTemplate();
 
-        //url주소 flask배포 주소로 변경 예정 "http://52.79.134.110:5005/recommend"
+        //http://52.79.134.110:5005/recommend
         ResponseEntity<String> responseEntity = restTemplate.exchange("http://52.79.134.110:5005/recommend", HttpMethod.POST,
                 entity, String.class);
 

@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/recommend', methods=['POST'])
 def recommend():
     userId = request.get_json().get('userId')
-   
+    
     user = pd.read_csv('./env/anofdata/user.csv') #./env/anofdata/알레르기 테이블.csv
     allergy = pd.read_csv('./env/anofdata/userallergystate.csv')
     ingredient = pd.read_csv('./env/anofdata/userIngredientstate.csv')
