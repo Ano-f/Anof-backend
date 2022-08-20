@@ -1,6 +1,5 @@
 package com.shinsunsu.anofspring.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
@@ -54,10 +53,12 @@ public class ProductController {
         return new ResponseEntity<>(productService.customInfo(map, principal.getName()), HttpStatus.OK);
     }
 
+    /*
     //식품 추천
     @PostMapping("/recommend")
     public ResponseEntity<Object> recommend(Principal principal) throws JsonProcessingException {
         return new ResponseEntity<>(productService.recommend(principal.getName()), HttpStatus.OK);
     }
+     */
 
 }
