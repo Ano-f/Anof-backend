@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from urllib import response
 from flask import Flask, request
 import json
@@ -10,10 +11,10 @@ app = Flask(__name__)
 @app.route('/recommend', methods=['POST'])
 def recommend():
     userId = request.get_json().get('userId')
-    
-    user = pd.read_csv('./env/anofdata/유저(id).csv') #./env/anofdata/알레르기 테이블.csv
-    allergy = pd.read_csv('./env/anofdata/알레르기 테이블.csv')
-    ingredient = pd.read_csv('./env/anofdata/성분 테이블.csv')
+   
+    user = pd.read_csv('./env/anofdata/user.csv') #./env/anofdata/알레르기 테이블.csv
+    allergy = pd.read_csv('./env/anofdata/userallergystate.csv')
+    ingredient = pd.read_csv('./env/anofdata/userIngredientstate.csv')
     user = pd.merge(user, allergy, left_on='allergyId', right_on='id')
     user = pd.merge(user, ingredient, left_on='IngredientId', right_on='id')
     user.drop(['allergyId', 'IngredientId', 'id_y', 'id'], axis=1, inplace=True)
@@ -32,8 +33,10 @@ def recommend():
         return similar_users
 
     similar_users = get_similarUsers(userId).sort_values('id_x')
-    likeProduct = pd.read_csv('./env/anofdata/선호.csv')
+    likeProduct = pd.read_csv('./env/anofdata/userlikeproduct.csv')
     likeProduct.drop(["id"], axis=1, inplace=True)
+    
+    print(similar_users)
     
     
     def get_recommendProducts(likeProdcut):
@@ -44,9 +47,12 @@ def recommend():
         products = []
         
         for i in similar_users.index:
+            if (likeProduct['userId']==i).any(): #userId==i가 존재하는 경우 
                 data = likeProduct.loc[likeProduct.userId==i]
                 data = data.pivot_table('isSelect', index='userId', columns='productId')
                 products.append(data.loc[i])
+                
+        print(products)
         
         if len(products)==0:
             return "0"
@@ -65,6 +71,8 @@ def recommend():
         recommendProduct = pd.DataFrame(data=arr, index=matrix.columns, columns={'recommend'})
 
         recommendProduct = recommendProduct.sort_values(by='recommend', ascending=False)[:10]
+        
+        print(recommendProduct)
                 
         recommendProduct.drop(recommendProduct[recommendProduct['recommend']==0].index, inplace=True)
                 
