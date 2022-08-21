@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/recommend', methods=['POST'])
 def recommend():
     userId = request.get_json().get('userId')
-    
+   
     user = pd.read_csv('./env/anofdata/user.csv') #./env/anofdata/알레르기 테이블.csv
     allergy = pd.read_csv('./env/anofdata/userallergystate.csv')
     ingredient = pd.read_csv('./env/anofdata/userIngredientstate.csv')
@@ -20,7 +20,7 @@ def recommend():
     user.set_index('id_x', inplace=True)
 
     corrMatrix_wo_std = pd.DataFrame(cosine_similarity(user), index=user.index, columns=user.index)
-    corrMatrix_wo_std 
+    corrMatrix_wo_std #로그인 사용자와 유사한 상태의 사용자들을 추출
 
     #userId를 입력하면 가장 유사한 평점을 준 user들을 return
     def get_similarUsers(userId):
@@ -42,7 +42,7 @@ def recommend():
         
         products = []
         
-        for i in similar_users.index:
+        for i in similar_users.index:   #유사한 사용자들의 선호 식품을 기반으로 추천 식품 choice
             if (likeProduct['userId']==i).any(): #userId==i가 존재하는 경우 
                 data = likeProduct.loc[likeProduct.userId==i]
                 data = data.pivot_table('isSelect', index='userId', columns='productId')
