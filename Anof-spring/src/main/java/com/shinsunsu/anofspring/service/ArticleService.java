@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
@@ -24,7 +23,7 @@ public class ArticleService {
             this.count = count;
         }
     }
-    static public class NameEntity {
+    static public class NameEntity implements Comparable<NameEntity>{
         final String text;
         final String type;
         Integer count;
@@ -33,13 +32,20 @@ public class ArticleService {
             this.type = type;
             this.count = count;
         }
+
+        @Override
+        public int compareTo(NameEntity o) {
+            return this.count.compareTo(o.count);
+        }
     }
 
-    public List<String> searchKeywords(String newsContent) {
+    public void searchKeywords(String args) throws IOException{
+        // 언어 분석 기술 문어/구어 중 한가지만 선택해 사용
+        // 언어 분석 기술(문어)
         String openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU";
-        String accessKey = "access-key";   // 발급받은 API Key
+        String accessKey = "key";   // 발급받은 API Key
         String analysisCode = "ner";        // 언어 분석 코드
-        String text = newsContent;           // 분석할 텍스트 데이터
+        String text = args;           // 분석할 텍스트 데이터
         Gson gson = new Gson();
 
         Map<String, Object> request = new HashMap<>();
@@ -82,11 +88,11 @@ public class ArticleService {
             if ( responseCode != 200 ) {
                 // 오류 내용 출력
                 System.out.println("[error] " + responBodyJson);
-                return null;
+                return ;
             }
 
             responeBody = gson.fromJson(responBodyJson, Map.class);
-            Integer result = ((Double) responeBody.get("result")).intValue();
+            int result = ((Double) responeBody.get("result")).intValue();
             Map<String, Object> returnObject;
             List<Map> sentences;
 
@@ -95,7 +101,7 @@ public class ArticleService {
 
                 // 오류 내용 출력
                 System.out.println("[error] " + responeBody.get("result"));
-                return null;
+                return ;
             }
 
             // 분석 결과 활용
@@ -107,7 +113,7 @@ public class ArticleService {
             List<Morpheme> morphemes = null;
             List<NameEntity> nameEntities = null;
 
-            for( Map<String, Object> sentence : sentences ) {
+            for( Map sentence : sentences ) {
                 // 형태소 분석기 결과 수집 및 정렬
                 List<Map<String, Object>> morphologicalAnalysisResult = (List<Map<String, Object>>) sentence.get("morp");
                 for( Map<String, Object> morphemeInfo : morphologicalAnalysisResult ) {
@@ -149,7 +155,21 @@ public class ArticleService {
                 });
             }
 
+            BufferedReader reader2=new BufferedReader(
+                    new FileReader("src/main/resources/stopwordlist.txt")
+            );
+
+            String stopwordstr;
+            List<String> stopwordlist = new ArrayList<String>();
+            while ((stopwordstr=reader2.readLine())!=null){
+                String[] word=stopwordstr.split(" ");
+                Collections.addAll(stopwordlist, word);
+            }
+
+            ArrayList<NameEntity> totallist=new ArrayList<NameEntity>();
+
             // 형태소들 중 명사들에 대해서 많이 노출된 순으로 출력 ( 최대 5개 )
+            assert morphemes != null;
             morphemes
                     .stream()
                     .filter(morpheme -> {
@@ -157,37 +177,64 @@ public class ArticleService {
                                 morpheme.type.equals("NNP") ||
                                 morpheme.type.equals("NNB");
                     })
-                    .limit(5)
+                    .limit(10)
                     .forEach(morpheme -> {
+                        totallist.add(new NameEntity(morpheme.text,morpheme.type,morpheme.count));
                         System.out.println("[명사] " + morpheme.text + " ("+morpheme.count+")" );
                     });
-
-            // 형태소들 중 동사들에 대해서 많이 노출된 순으로 출력 ( 최대 5개 )
-            System.out.println("");
-            morphemes
-                    .stream()
-                    .filter(morpheme -> {
-                        return morpheme.type.equals("VV");
-                    })
-                    .limit(5)
-                    .forEach(morpheme -> {
-                        System.out.println("[동사] " + morpheme.text + " ("+morpheme.count+")" );
-                    });
-
             // 인식된 개채명들 많이 노출된 순으로 출력 ( 최대 5개 )
             System.out.println("");
             nameEntities
                     .stream()
-                    .limit(5)
+                    .limit(10)
                     .forEach(nameEntity -> {
+                        int dupli=0;
+                        for (NameEntity entity : totallist) {
+                            if (entity.text.equals(nameEntity.text)) {
+                                dupli += 1;
+                                entity.count += nameEntity.count;
+                                break;
+                            }
+                        }
+                        if (dupli==0){
+                            totallist.add(new NameEntity(nameEntity.text,nameEntity.type,nameEntity.count));
+                        }
                         System.out.println("[개체명] " + nameEntity.text + " ("+nameEntity.count+")" );
                     });
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            System.out.println("");
+
+            int totallistindex=0;
+
+            while(totallistindex<totallist.size()){
+                if(totallist.get(totallistindex).text.length()==1){
+                    totallist.remove(totallistindex);
+                } else {
+                    totallistindex++;
+                }
+            }
+
+            int stopwordlistidx=-1;
+            while(stopwordlistidx<(stopwordlist.size()-1)){
+                stopwordlistidx++;      // -1 -> 0
+                for(int i=0;i<totallist.size();i++){
+                    if (totallist.get(i).text.equals(stopwordlist.get(stopwordlistidx))){
+                        totallist.remove(i);
+                        break;
+                    }
+                }
+            }
+
+            Collections.sort(totallist);
+            Collections.reverse(totallist);
+
+            for (NameEntity nameEntity : totallist) {
+                if (nameEntity.count >= 4) {
+                    System.out.println(nameEntity.text);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return null;
     }
 }
