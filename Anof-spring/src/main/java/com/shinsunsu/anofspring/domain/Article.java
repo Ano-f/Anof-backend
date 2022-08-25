@@ -20,8 +20,14 @@ public class Article {
     @Column(nullable = false, length = 5000)
     private String content;
 
-    @Column(nullable = false, length = 1000)
-    private String keyword;
+    @Column(nullable = false, length = 50)
+    private String keyword1;
+
+    @Column(nullable = false, length = 50)
+    private String keyword2;
+
+    @Column(nullable = false, length = 50)
+    private String keyword3;
 
     @Column(nullable = false, length = 5000)
     private String url;
