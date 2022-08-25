@@ -2,6 +2,7 @@ package com.shinsunsu.anofspring.controller;
 
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.updateUserRequest;
+import com.shinsunsu.anofspring.dto.response.FAQResponse;
 import com.shinsunsu.anofspring.dto.response.PointDetailResponse;
 import com.shinsunsu.anofspring.dto.response.UserResponse;
 import com.shinsunsu.anofspring.service.MypageService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -48,5 +50,11 @@ public class MypageController {
     public ResponseEntity<Boolean> updateUserInfo(@RequestBody updateUserRequest updateInfo, Principal principal) {
         User user = userService.loadUserByUsername(principal.getName());
         return new ResponseEntity<>(mypageService.updateUserInfo(updateInfo, user), HttpStatus.OK);
+    }
+
+    //FAQ
+    @GetMapping("/faq")
+    public ResponseEntity<List<FAQResponse>> faq(Principal principal) {
+        return new ResponseEntity<>(mypageService.faq(), HttpStatus.OK);
     }
 }

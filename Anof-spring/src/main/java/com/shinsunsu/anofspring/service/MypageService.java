@@ -2,18 +2,16 @@ package com.shinsunsu.anofspring.service;
 
 import com.shinsunsu.anofspring.domain.*;
 import com.shinsunsu.anofspring.dto.request.updateUserRequest;
-import com.shinsunsu.anofspring.dto.response.CustomAllergyResponse;
-import com.shinsunsu.anofspring.dto.response.CustomUserIngredientResponse;
-import com.shinsunsu.anofspring.dto.response.PointDetailResponse;
-import com.shinsunsu.anofspring.dto.response.UserResponse;
+import com.shinsunsu.anofspring.dto.response.*;
 import com.shinsunsu.anofspring.exception.mypage.DangerIngredientException;
 import com.shinsunsu.anofspring.repository.DislikeProductRepository;
+import com.shinsunsu.anofspring.repository.FAQRepository;
 import com.shinsunsu.anofspring.repository.PointDetailRepository;
-import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -23,6 +21,8 @@ public class MypageService {
     private final DislikeProductRepository dislikeProductRepository;
     private final PointDetailRepository pointDetailRepository;
     //private final UserRepository userRepository;
+
+    private final FAQRepository faqRepository;
 
     //위험 성분 분석
     @Transactional(readOnly = true)
@@ -107,6 +107,18 @@ public class MypageService {
             else updateInfo.updateIngredient(user.getIngredient(), updateInfo.getIngredient());
         }
         return true;
+    }
 
+    //FAQ
+    @Transactional(readOnly = true)
+    public List<FAQResponse> faq() {
+
+        List<FAQ> faqList= faqRepository.findAll();
+        List<FAQResponse> faqResponseList = new ArrayList<>();
+
+        for(FAQ faq : faqList) {
+            faqResponseList.add(new FAQResponse(faq));
+        }
+        return faqResponseList;
     }
 }
