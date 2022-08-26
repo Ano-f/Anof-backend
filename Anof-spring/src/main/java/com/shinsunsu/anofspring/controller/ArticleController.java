@@ -1,6 +1,5 @@
 package com.shinsunsu.anofspring.controller;
 
-import com.shinsunsu.anofspring.domain.Article;
 import com.shinsunsu.anofspring.dto.request.ArticleRequest;
 import com.shinsunsu.anofspring.dto.response.ArticleResponse;
 import com.shinsunsu.anofspring.service.ArticleService;
@@ -9,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 

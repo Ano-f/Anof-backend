@@ -15,15 +15,6 @@ public class ArticleRequest {
     String keyword2;
     String keyword3;
 
-//    public static Article newArticle(ArticleRequest articleRequest) {
-//        Article article = new Article();
-//        article.setTitle(article.getTitle());
-//        article.setContent(article.getContent());
-//        article.setUrl(article.getUrl());
-//
-//        return article;
-//    }
-//
     public static Article NewArticle(ArticleRequest articleRequest, List<String> keywords, String summary) {
         Article article = new Article();
         article.setTitle(articleRequest.getTitle());

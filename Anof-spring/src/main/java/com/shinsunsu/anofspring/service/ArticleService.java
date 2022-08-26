@@ -4,12 +4,11 @@ import com.google.gson.Gson;
 import com.shinsunsu.anofspring.domain.Article;
 import com.shinsunsu.anofspring.dto.request.ArticleRequest;
 import com.shinsunsu.anofspring.dto.response.ArticleResponse;
+import com.shinsunsu.anofspring.exception.article.ArticleNotFoundException;
 import com.shinsunsu.anofspring.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +35,6 @@ public class ArticleService {
     public List<String> searchKeywords(String args){
 
         List<String> tags = new ArrayList<>();
-        // 언어 분석 기술 문어/구어 중 한가지만 선택해 사용
         // 언어 분석 기술(문어)
         String openApiURL = "http://aiopen.etri.re.kr:8000/WiseNLU";
         String accessKey = key;   // 발급받은 API Key
@@ -175,7 +173,6 @@ public class ArticleService {
                         totallist.add(new ArticleKeywordService.NameEntity(morpheme.text,morpheme.type,morpheme.count));
                     });
             // 인식된 개채명들 많이 노출된 순으로 출력 ( 최대 5개 )
-            System.out.println("");
             nameEntities
                     .stream()
                     .limit(10)
@@ -218,10 +215,7 @@ public class ArticleService {
             Collections.reverse(totallist);
 
             for (int i = 0; i < 3; i++) {
-                if (totallist.get(i).count >= 4) {
-                    tags.add(totallist.get(i).text);
-                    System.out.println(totallist.get(i).text);
-                }
+                if (totallist.get(i).count >= 4) tags.add(totallist.get(i).text);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -298,7 +292,7 @@ public class ArticleService {
     //기사 조회
     public ArticleResponse getArticle(Long articleId) {
         Article article = articleRepository.findById(articleId)
-                .orElseThrow();
+                .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다"));
         return  new ArticleResponse(article);
     }
 }
