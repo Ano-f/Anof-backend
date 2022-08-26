@@ -4,6 +4,7 @@ import com.shinsunsu.anofspring.domain.Article;
 import com.shinsunsu.anofspring.dto.request.ArticleRequest;
 import com.shinsunsu.anofspring.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,17 +23,10 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping("/newarticle")
-    public ResponseEntity<Object> addArticle(Principal principal, @RequestBody ArticleRequest articleRequest) throws IOException {
-        Article article = new Article();
-        article.setTitle(articleRequest.getTitle());
-        article.setContent(articleRequest.getContent());
-        article.setUrl(articleRequest.getUrl());
-
+    public ResponseEntity<Object> addArticle(Principal principal, @RequestBody ArticleRequest articleRequest) {
+        String summary = articleService.getSummary(articleRequest);
         List<String> keywords = articleService.searchKeywords(articleRequest.getContent());
 
-        //articlerequest랑 keywords를 request에 보내서 한방에 db에 저장
-        articleService.addArticle(ArticleRequest.NewArticle(articleRequest, keywords));
-        return null;
-        //ArticleRequest.addNewArticle( )
+        return new ResponseEntity<>(articleService.addArticle(ArticleRequest.NewArticle(articleRequest, keywords, summary)), HttpStatus.CREATED);
     }
 }

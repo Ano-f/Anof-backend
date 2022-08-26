@@ -2,8 +2,13 @@ package com.shinsunsu.anofspring.service;
 
 import com.google.gson.Gson;
 import com.shinsunsu.anofspring.domain.Article;
+import com.shinsunsu.anofspring.dto.request.ArticleRequest;
 import com.shinsunsu.anofspring.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,11 @@ public class ArticleService {
 
     @Value("${keyword-key}")
     private String key;
+    @Value("${client-ID}")
+    private String clientID;
+    @Value("${client-Secret}")
+    private String clientSecret;
+
 
     private final ArticleRepository articleRepository;
 
@@ -216,6 +226,66 @@ public class ArticleService {
             e.printStackTrace();
         }
         return tags;
+    }
+
+    //기사 요약
+    public String getSummary(ArticleRequest articleRequest) {
+
+        String responseBody = null;
+        JSONObject jsonObjectAll = new JSONObject();
+        JSONObject jsonObject1 = new JSONObject();
+        JSONObject jsonObject2 = new JSONObject();
+
+        jsonObject1.put("title", articleRequest.getTitle());
+        jsonObject1.put("content", articleRequest.getContent());
+        jsonObjectAll.put("document", jsonObject1);
+
+        jsonObject2.put("language","ko");
+        jsonObject2.put("model","news");
+        jsonObject2.put("tone","2");
+        jsonObject2.put("summaryCount","3");
+        jsonObjectAll.put("option", jsonObject2);
+
+        try {
+            String link = "https://naveropenapi.apigw.ntruss.com/text-summary/v1/summarize";
+            HttpURLConnection conn = null;
+            URL url = new URL(link);
+            conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type","application/json");
+            conn.setRequestProperty("X-NCP-APIGW-API-KEY", clientSecret);
+            conn.setRequestProperty("X-NCP-APIGW-API-KEY-ID", clientID);
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+            bw.write(jsonObjectAll.toString());
+            bw.flush();
+            bw.close();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            responseBody = in.readLine();
+
+            JSONParser jsonParser = new JSONParser();
+            //JSON데이터를 넣어 JSON Object 로 만들어 준다.
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(responseBody);
+            responseBody = (String) jsonObject.get("summary");
+
+            int resposeCode = conn.getResponseCode();
+            if(resposeCode == 400) {
+                System.out.println("[error : 400] : 명령 실행 오류 ");
+            } else if(resposeCode == 500) {
+                System.out.println("[error : 500] : 서버 오류 ");
+            } else {
+                System.out.println(resposeCode + ": 응답코드");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return responseBody;
     }
 
     //기사 등록

@@ -24,10 +24,10 @@ public class ArticleRequest {
 //        return article;
 //    }
 //
-    public static Article NewArticle(ArticleRequest articleRequest, List<String> keywords) {
+    public static Article NewArticle(ArticleRequest articleRequest, List<String> keywords, String summary) {
         Article article = new Article();
         article.setTitle(articleRequest.getTitle());
-        article.setContent(articleRequest.getContent());
+        article.setContent(summary);
         article.setUrl(articleRequest.getUrl());
         article.setKeyword1(keywords.get(0));
         article.setKeyword2(keywords.get(1));
