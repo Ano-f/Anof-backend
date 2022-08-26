@@ -3,6 +3,7 @@ package com.shinsunsu.anofspring.service;
 import com.google.gson.Gson;
 import com.shinsunsu.anofspring.domain.Article;
 import com.shinsunsu.anofspring.dto.request.ArticleRequest;
+import com.shinsunsu.anofspring.dto.response.ArticleResponse;
 import com.shinsunsu.anofspring.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -292,5 +293,12 @@ public class ArticleService {
     public boolean addArticle(Article article) {
         articleRepository.save(article);
         return true;
+    }
+
+    //기사 조회
+    public ArticleResponse getArticle(Long articleId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow();
+        return  new ArticleResponse(article);
     }
 }
