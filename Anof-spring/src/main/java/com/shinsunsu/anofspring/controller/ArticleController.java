@@ -23,16 +23,15 @@ public class ArticleController {
 
     @PostMapping("/newarticle")
     public ResponseEntity<Object> addArticle(Principal principal, @RequestBody ArticleRequest articleRequest) throws IOException {
-//        Article article = new Article();
-//        article.setTitle(articleRequest.getTitle());
-//        article.setContent(articleRequest.getContent());
-//        article.setUrl(articleRequest.getUrl());
+        Article article = new Article();
+        article.setTitle(articleRequest.getTitle());
+        article.setContent(articleRequest.getContent());
+        article.setUrl(articleRequest.getUrl());
 
-        System.out.println(articleRequest.getContent());
-        articleService.searchKeywords(articleRequest.getContent());
-//        for(String keyword : keywords) {
-//            System.out.println(keyword);
-//        }
+        List<String> keywords = articleService.searchKeywords(articleRequest.getContent());
+
+        //articlerequest랑 keywords를 request에 보내서 한방에 db에 저장
+        articleService.addArticle(ArticleRequest.NewArticle(articleRequest, keywords));
         return null;
         //ArticleRequest.addNewArticle( )
     }
