@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -21,6 +22,20 @@ public class UserService implements UserDetailsService {
     //회원가입
     @Transactional
     public User join(User newUser){
+        List<User> users = userRepository.findTopByOrderByRankingDesc();
+
+        if(users.isEmpty()) {
+            newUser.setRanking(1L);
+        }
+        else {
+            User user = users.get(0);
+            if(user.getPoint()==0) {
+                newUser.setRanking(user.getRanking());
+            }
+            else {
+                newUser.setRanking(user.getRanking()+userRepository.countByRanking(user.getRanking()));
+            }
+        }
         return userRepository.save(newUser);
     }
 

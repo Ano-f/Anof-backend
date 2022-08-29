@@ -21,4 +21,19 @@ public class UserResponse {
 
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class rankingResponse {
+
+        private String nickname;
+        private Long ranking;
+        private int point;
+
+        public rankingResponse(User user) {
+            this.nickname = user.getNickname();
+            this.ranking = user.getRanking();
+            this.point = user.getPoint();
+        }
+    }
 }

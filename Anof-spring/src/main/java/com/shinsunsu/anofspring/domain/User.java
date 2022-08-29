@@ -40,6 +40,9 @@ public class User implements UserDetails {
     @Column(length = 300)
     private String accessToken;
 
+    @Column
+    private Long ranking;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="allergyId")
     private Allergy allergy;

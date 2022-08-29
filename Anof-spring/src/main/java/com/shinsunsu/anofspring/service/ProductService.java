@@ -6,7 +6,7 @@ import com.shinsunsu.anofspring.domain.Product;
 
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.FlaskDto;
-import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
+import com.shinsunsu.anofspring.dto.request.ProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.ProductRepository;
@@ -14,6 +14,7 @@ import com.shinsunsu.anofspring.repository.RegisterProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -64,11 +65,61 @@ public class ProductService {
         return productList;
     }
 
-    //상품 등록
+    //상품 등록 요청
     @Transactional
-    public boolean registerProduct(RegisterProductRequest request, String userId) {
+    public boolean registerProduct(ProductRequest.registerProductRequest request, String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow();
-        registerProductRepository.save(RegisterProductRequest.RegisterProduct(request, user));
+        registerProductRepository.save(ProductRequest.registerProductRequest.RegisterProduct(request, user));
+        return true;
+    }
+
+    //상품 등록 + 포인트 적립
+    @Transactional
+    public boolean addProduct(ProductRequest.addProductRequest request) {
+        productRepository.save(ProductRequest.addProductRequest.addProduct(request));
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+        user.setPoint(user.getPoint()+5);
+
+        if(user.getRanking()!=1) {
+            List<User> topUsers = userRepository.findByHighRanking(user.getRanking());
+            User topUser = topUsers.get(0);
+            if(user.getPoint()>topUser.getPoint()) {
+                Long ranking = user.getRanking();
+                user.setRanking(topUser.getRanking());
+                for(User user1 : topUsers) {
+                    user1.setRanking(ranking);
+                }
+            }
+            else if (user.getPoint()==topUser.getPoint()) {
+                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
+                sameRankedUsers.remove(user);
+                if(!sameRankedUsers.isEmpty()) {
+                    for(User user1 : sameRankedUsers) {
+                        user1.setRanking(user.getRanking()+1);
+                    }
+                }
+                user.setRanking(topUser.getRanking());
+            }
+            else {
+                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
+                sameRankedUsers.remove(user);
+                if(!sameRankedUsers.isEmpty()) {
+                    for(User user1 : sameRankedUsers) {
+                        user1.setRanking(user.getRanking()+1);
+                    }
+                }
+            }
+        }
+        else {
+            List<User> sameRankedUsers = userRepository.findByRanking(1L);
+            sameRankedUsers.remove(user);
+            if(!sameRankedUsers.isEmpty()) {
+                for(User user1 : sameRankedUsers) {
+                    user1.setRanking(user.getRanking()+1);
+                }
+            }
+        }
         return true;
     }
 
