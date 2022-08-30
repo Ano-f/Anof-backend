@@ -2,10 +2,13 @@ package com.shinsunsu.anofspring.service;
 
 import com.google.gson.Gson;
 import com.shinsunsu.anofspring.domain.Article;
+import com.shinsunsu.anofspring.domain.Product;
 import com.shinsunsu.anofspring.dto.request.ArticleRequest;
 import com.shinsunsu.anofspring.dto.response.ArticleResponse;
 import com.shinsunsu.anofspring.exception.article.ArticleNotFoundException;
+import com.shinsunsu.anofspring.exception.product.ProductException;
 import com.shinsunsu.anofspring.repository.ArticleRepository;
+import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -28,7 +31,7 @@ public class ArticleService {
     @Value("${client-Secret}")
     private String clientSecret;
 
-
+    private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
 
     //키워드 찾기(3개)
@@ -146,9 +149,6 @@ public class ArticleService {
                 });
             }
 
-//            BufferedReader reader2=new BufferedReader(
-//                    new FileReader("src/main/resources/stopwordlist.txt")
-//            );
 
             List<String> stopwordlist = new ArrayList<>();
             stopwordlist = Arrays.asList(new String[]{"현재", "지금", "과거", "이번해", "지난해", "지난달", "이번달", "하루전", "이틀전", "오늘", "어제", "내일",
@@ -157,10 +157,6 @@ public class ArticleService {
                     "실시간", "일대", "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월", "도대체", "지난",
                     "바로", "하나", "한층", "대두", "당연", "상황", "적용", "사람", "인간", "이미", "항상", "자주", "전부", "보통", "공통", "자꾸",
                     "곳곳", "한번", "열흘", "그대로", "그대", "결국", "금방", "전혀", "마치", "대체로", "매달", "매주", "매일", "조금", "올해", "것"});
-//            while ((stopwordstr=reader2.readLine())!=null){
-//                String[] word=stopwordstr.split(" ");
-//                Collections.addAll(stopwordlist, word);
-//            }
 
             ArrayList<ArticleKeywordService.NameEntity> totallist=new ArrayList<ArticleKeywordService.NameEntity>();
 
@@ -299,5 +295,92 @@ public class ArticleService {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다"));
         return  new ArticleResponse(article);
+    }
+
+    //맞춤 기사
+    public List<ArticleResponse> customArticle(String userId) {
+        String[] allergyKor = {"밀가루", "우유", "메밀", "땅콩", "대두", "고등어", "게", "새우", "돼지고기", "복숭아", "토마토",
+                "호두", "닭고기", "쇠고기", "오징어", "조개류", "달걀"};
+        List<String> allergyKorList = Arrays.asList(allergyKor);
+        String[] ingredientKor = {"나트륨", "탄수화물", "당류", "지방", "트랜스지방", "포화지방산", "콜레스테롤", "단백질", "칼로리"};
+
+        List<Integer> userAllergy = userRepository.findAllergy(userId).CustomAllergy();
+        List<Integer> userIngredient = userRepository.findIngredient(userId).CustomIngredient();
+        List<ArticleResponse> articleResponseList = articleRepository.findArticle();
+        List<Article> customArticle = new ArrayList<>();
+
+//        int k = -1;
+//        for(int i : userAllergy) {
+//            k++;
+//            if (i != 1) continue;
+//            System.out.println("allergy: " + customAllergy[k]);
+//            for(ArticleResponse articleResponse : articleResponseList) {
+//                System.out.println("article:::::"+ articleResponse.getTitle());
+//                if (allergyKor[k] == articleResponse.getKeyword1() || allergyKor[k] == articleResponse.getKeyword2() || allergyKor[k] == articleResponse.getKeyword3()) {
+//
+//                    customArticle.add(articleRepository.findById(articleResponse.getArticleId())
+//                            .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다")));
+//                }
+//            }
+//        }
+//
+
+
+//        for(ArticleResponse articleResponse : articleResponseList) {
+//            String keyword1 = articleResponse.getKeyword1();
+//            String keyword2 = articleResponse.getKeyword2();
+//            String keyword3 = articleResponse.getKeyword3();
+//            int k = -1;
+//            for(int i : userAllergy) {
+//                k++;
+//                if (i==0) continue;
+//                if (allergyKorList.contains(keyword1)){
+//                    customArticle.add(articleRepository.findById(articleResponse.getArticleId())
+//                            .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다")));
+//                break;
+//                }
+//            }
+//        }
+
+        ArrayList userAllergyIs1 = new ArrayList();
+        for(int i = 0; i<userAllergy.size(); i++) {
+            if (userAllergy.get(i) == 1) userAllergyIs1.add(allergyKor[i]);
+        }
+
+        for(ArticleResponse articleResponse : articleResponseList) {
+            String keyword1 = articleResponse.getKeyword1();
+            String keyword2 = articleResponse.getKeyword2();
+            String keyword3 = articleResponse.getKeyword3();
+            //matches 이용??
+
+            if(userAllergyIs1.contains(keyword1)) customArticle.add(articleRepository.findById(articleResponse.getArticleId())
+                    .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다")));
+            if(userAllergyIs1.contains(keyword2)) customArticle.add(articleRepository.findById(articleResponse.getArticleId())
+                    .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다")));
+            if(userAllergyIs1.contains(keyword3)) customArticle.add(articleRepository.findById(articleResponse.getArticleId())
+                    .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다")));
+        }
+
+//        int k = -1;
+//        for(int i : userIngredient) {
+//            k++;
+//            if (i != 1) continue;
+//            for(ArticleResponse articleResponse : articleResponseList) {
+//                if (ingredientKor[k] == articleResponse.getKeyword1() || ingredientKor[k] == articleResponse.getKeyword2() || ingredientKor[k] == articleResponse.getKeyword3()) {
+//                    customArticle.add(articleRepository.findById(articleResponse.getArticleId())
+//                            .orElseThrow(() -> new ArticleNotFoundException("존재하지 않는 기사입니다")));
+//                }
+//            }
+//        }
+
+
+
+        List<ArticleResponse> customAritcleList= new ArrayList<>();
+        for(Article article : customArticle) {
+            customAritcleList.add(new ArticleResponse(article));
+            System.out.println("size----------------------:"+customAritcleList.size());
+            if(customAritcleList.size()==3) break;
+        }
+        return customAritcleList;
     }
 }

@@ -5,6 +5,7 @@ import com.shinsunsu.anofspring.config.JwtTokenProvider;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.UserRequest;
 import com.shinsunsu.anofspring.exception.user.PasswordErrorException;
+import com.shinsunsu.anofspring.service.ArticleService;
 import com.shinsunsu.anofspring.service.MainpageService;
 import com.shinsunsu.anofspring.service.ProductService;
 import com.shinsunsu.anofspring.service.UserService;
@@ -29,6 +30,7 @@ public class UserController {
     private ProductService productService;
     @Autowired
     private MainpageService mainpageService;
+    private final ArticleService articleService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -73,7 +75,7 @@ public class UserController {
         map.put("nickname",loginUser.getNickname());
         map.put("userId",loginUser.getUserId());
         map.put("recommend", productService.recommend(loginUser.getUserId()));
-        map.put("article", mainpageService.getArticle(loginUser.getUserId())); //맞춤 기사
+        map.put("article", articleService.customArticle(loginUser.getUserId())); //맞춤 기사
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
