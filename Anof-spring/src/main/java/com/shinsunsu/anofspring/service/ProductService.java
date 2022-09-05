@@ -6,13 +6,17 @@ import com.shinsunsu.anofspring.domain.Product;
 
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.FlaskDto;
+import com.shinsunsu.anofspring.dto.request.PointRequest;
 import com.shinsunsu.anofspring.dto.request.ProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.exception.product.ProductException;
+import com.shinsunsu.anofspring.repository.PointDetailRepository;
 import com.shinsunsu.anofspring.repository.ProductRepository;
 import com.shinsunsu.anofspring.repository.RegisterProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final RegisterProductRepository registerProductRepository;
+    private final PointDetailRepository pointDetailRepository;
+    private final RedisTemplate redisTemplate;
 
     //식품Id로 식품이 db에 있는지 확인
     @Transactional(readOnly = true)
@@ -76,50 +82,17 @@ public class ProductService {
     //상품 등록 + 포인트 적립
     @Transactional
     public boolean addProduct(ProductRequest.addProductRequest request) {
-        productRepository.save(ProductRequest.addProductRequest.addProduct(request));
+        Product product = productRepository.save(ProductRequest.addProductRequest.addProduct(request));
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
-        user.setPoint(user.getPoint()+5);
+        user.setPoint(user.getPoint() + 5);
 
-        if(user.getRanking()!=1) {
-            List<User> topUsers = userRepository.findByHighRanking(user.getRanking());
-            User topUser = topUsers.get(0);
-            if(user.getPoint()>topUser.getPoint()) {
-                Long ranking = user.getRanking();
-                user.setRanking(topUser.getRanking());
-                for(User user1 : topUsers) {
-                    user1.setRanking(ranking);
-                }
-            }
-            else if (user.getPoint()==topUser.getPoint()) {
-                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
-                sameRankedUsers.remove(user);
-                if(!sameRankedUsers.isEmpty()) {
-                    for(User user1 : sameRankedUsers) {
-                        user1.setRanking(user.getRanking()+1);
-                    }
-                }
-                user.setRanking(topUser.getRanking());
-            }
-            else {
-                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
-                sameRankedUsers.remove(user);
-                if(!sameRankedUsers.isEmpty()) {
-                    for(User user1 : sameRankedUsers) {
-                        user1.setRanking(user.getRanking()+1);
-                    }
-                }
-            }
+        if (user.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
+            redisTemplate.opsForZSet().add("ranking", user.getNickname(), user.getPoint());
         }
-        else {
-            List<User> sameRankedUsers = userRepository.findByRanking(1L);
-            sameRankedUsers.remove(user);
-            if(!sameRankedUsers.isEmpty()) {
-                for(User user1 : sameRankedUsers) {
-                    user1.setRanking(user.getRanking()+1);
-                }
-            }
-        }
+
+        pointDetailRepository.save(PointRequest.PointDetailRequest(user, product, 5));
+
         return true;
     }
 

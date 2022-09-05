@@ -4,38 +4,29 @@ import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.exception.user.UserNotFoundException;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final RedisTemplate redisTemplate;
 
     //회원가입
     @Transactional
     public User join(User newUser){
-        List<User> users = userRepository.findTopByOrderByRankingDesc();
 
-        if(users.isEmpty()) {
-            newUser.setRanking(1L);
+        if (newUser.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
+            redisTemplate.opsForZSet().add("ranking", newUser.getNickname(), newUser.getPoint());
         }
-        else {
-            User user = users.get(0);
-            if(user.getPoint()==0) {
-                newUser.setRanking(user.getRanking());
-            }
-            else {
-                newUser.setRanking(user.getRanking()+userRepository.countByRanking(user.getRanking()));
-            }
-        }
+
         return userRepository.save(newUser);
     }
 
