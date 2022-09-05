@@ -6,14 +6,19 @@ import com.shinsunsu.anofspring.domain.Product;
 
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.FlaskDto;
-import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
+import com.shinsunsu.anofspring.dto.request.PointRequest;
+import com.shinsunsu.anofspring.dto.request.ProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.exception.product.ProductException;
+import com.shinsunsu.anofspring.repository.PointDetailRepository;
 import com.shinsunsu.anofspring.repository.ProductRepository;
 import com.shinsunsu.anofspring.repository.RegisterProductRepository;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -29,6 +34,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final RegisterProductRepository registerProductRepository;
+    private final PointDetailRepository pointDetailRepository;
+    private final RedisTemplate redisTemplate;
 
     //식품Id로 식품이 db에 있는지 확인
     @Transactional(readOnly = true)
@@ -64,11 +71,28 @@ public class ProductService {
         return productList;
     }
 
-    //상품 등록
+    //상품 등록 요청
     @Transactional
-    public boolean registerProduct(RegisterProductRequest request, String userId) {
+    public boolean registerProduct(ProductRequest.registerProductRequest request, String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow();
-        registerProductRepository.save(RegisterProductRequest.RegisterProduct(request, user));
+        registerProductRepository.save(ProductRequest.registerProductRequest.RegisterProduct(request, user));
+        return true;
+    }
+
+    //상품 등록 + 포인트 적립
+    @Transactional
+    public boolean addProduct(ProductRequest.addProductRequest request) {
+        Product product = productRepository.save(ProductRequest.addProductRequest.addProduct(request));
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+        user.setPoint(user.getPoint() + 5);
+
+        if (user.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
+            redisTemplate.opsForZSet().add("ranking", user.getNickname(), user.getPoint());
+        }
+
+        pointDetailRepository.save(PointRequest.PointDetailRequest(user, product, 5));
+
         return true;
     }
 

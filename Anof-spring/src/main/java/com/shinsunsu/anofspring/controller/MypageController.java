@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -55,5 +56,12 @@ public class MypageController {
     @GetMapping("/faq")
     public ResponseEntity<List<FAQResponse>> faq(Principal principal) {
         return new ResponseEntity<>(mypageService.faq(), HttpStatus.OK);
+    }
+
+    //랭킹 조회
+    @GetMapping("/ranking")
+    public ResponseEntity<Map<String, Object>> ranking(Principal principal) {
+        User user = userService.loadUserByUsername(principal.getName());
+        return new ResponseEntity<>(mypageService.getRanking(user), HttpStatus.OK);
     }
 }

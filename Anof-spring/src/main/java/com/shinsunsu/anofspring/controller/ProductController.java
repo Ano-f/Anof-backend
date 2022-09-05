@@ -1,7 +1,7 @@
 package com.shinsunsu.anofspring.controller;
 
 import com.shinsunsu.anofspring.domain.User;
-import com.shinsunsu.anofspring.dto.request.RegisterProductRequest;
+import com.shinsunsu.anofspring.dto.request.ProductRequest;
 import com.shinsunsu.anofspring.dto.response.ProductResponse;
 import com.shinsunsu.anofspring.service.ProductService;
 import com.shinsunsu.anofspring.service.UserService;
@@ -43,7 +43,7 @@ public class ProductController {
 
     //식품 등록 요청
     @PostMapping("/requestProduct")
-    public ResponseEntity<Object> registerProduct(@RequestBody RegisterProductRequest request, Principal principal) {
+    public ResponseEntity<Object> registerProduct(@RequestBody ProductRequest.registerProductRequest request, Principal principal) {
         return new ResponseEntity<>(productService.registerProduct(request, principal.getName()), HttpStatus.CREATED);
     }
 
@@ -51,6 +51,12 @@ public class ProductController {
     @PostMapping("/custom")
     public ResponseEntity<Object> customInfo(@RequestBody Map<String, String> map, Principal principal) {
         return new ResponseEntity<>(productService.customInfo(map, principal.getName()), HttpStatus.OK);
+    }
+
+    //식품 등록
+    @PostMapping("/newProduct")
+    public ResponseEntity<Boolean> addProduct(@RequestBody ProductRequest.addProductRequest request, Principal principal) {
+        return new ResponseEntity<>(productService.addProduct(request), HttpStatus.OK);
     }
 
     /*
