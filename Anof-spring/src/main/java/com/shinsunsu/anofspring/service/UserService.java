@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
-
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
