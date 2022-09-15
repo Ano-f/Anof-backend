@@ -4,7 +4,6 @@ import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.exception.user.UserNotFoundException;
 import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,15 +16,15 @@ import java.util.Collections;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RedisTemplate redisTemplate;
+    //private final RedisTemplate redisTemplate;
 
     //회원가입
     @Transactional
     public User join(User newUser){
 
-        if (newUser.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
-            redisTemplate.opsForZSet().add("ranking", newUser.getNickname(), newUser.getPoint());
-        }
+//        if (newUser.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
+//            redisTemplate.opsForZSet().add("ranking", newUser.getNickname(), newUser.getPoint());
+//        }
 
         return userRepository.save(newUser);
     }
