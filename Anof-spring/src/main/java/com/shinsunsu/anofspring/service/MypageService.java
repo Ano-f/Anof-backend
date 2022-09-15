@@ -8,13 +8,10 @@ import com.shinsunsu.anofspring.repository.DislikeProductRepository;
 import com.shinsunsu.anofspring.repository.FAQRepository;
 import com.shinsunsu.anofspring.repository.PointDetailRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +20,7 @@ public class MypageService {
     private final DislikeProductRepository dislikeProductRepository;
     private final PointDetailRepository pointDetailRepository;
     private final FAQRepository faqRepository;
-    private final RedisTemplate redisTemplate;
+    //private final RedisTemplate redisTemplate;
 
     //위험 성분 분석
     @Transactional(readOnly = true)
@@ -123,6 +120,7 @@ public class MypageService {
         return faqResponseList;
     }
 
+    /*
     //랭킹
     @Transactional(readOnly = true)
     public Map<String, Object> getRanking(User user) {
@@ -157,4 +155,6 @@ public class MypageService {
         return map;
     }
 
+
+     */
 }
