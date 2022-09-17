@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -25,4 +26,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select u.id from User u where u.userId = :userId")
     Long findIdByUserId(@Param("userId") String userId);
+
+    List<User> findTopByOrderByRankingDesc();
+    int countByRanking(Long ranking);
+    List<User> findTop50ByOrderByRanking();
+    List<User> findByRanking(Long Ranking);
+
+    @Query("select u from User u where (select max(u.ranking) from User u where u.ranking < :ranking) = u.ranking")
+    List<User> findByHighRanking(@Param("ranking") Long ranking);
 }

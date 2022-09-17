@@ -7,6 +7,7 @@ import com.shinsunsu.anofspring.exception.mypage.DangerIngredientException;
 import com.shinsunsu.anofspring.repository.DislikeProductRepository;
 import com.shinsunsu.anofspring.repository.FAQRepository;
 import com.shinsunsu.anofspring.repository.PointDetailRepository;
+import com.shinsunsu.anofspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ public class MypageService {
     private final DislikeProductRepository dislikeProductRepository;
     private final PointDetailRepository pointDetailRepository;
     private final FAQRepository faqRepository;
+    private final UserRepository userRepository;
     //private final RedisTemplate redisTemplate;
 
     //위험 성분 분석
@@ -118,6 +120,23 @@ public class MypageService {
             faqResponseList.add(new FAQResponse(faq));
         }
         return faqResponseList;
+    }
+
+    //랭킹
+    @Transactional(readOnly = true)
+    public Map<String, Object> getRanking(User user) {
+        List<User> userList = userRepository.findTop50ByOrderByRanking();
+        List<UserResponse.rankingResponse> rankingResponseList = new ArrayList<>();
+
+        for(User topUser : userList) {
+            rankingResponseList.add(new UserResponse.rankingResponse(topUser));
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("ranking", rankingResponseList);
+        map.put("user", new UserResponse.rankingResponse(user));
+
+        return map;
     }
 
     /*
