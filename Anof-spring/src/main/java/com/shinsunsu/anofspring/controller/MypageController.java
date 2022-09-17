@@ -58,6 +58,13 @@ public class MypageController {
         return new ResponseEntity<>(mypageService.faq(), HttpStatus.OK);
     }
 
+    //랭킹 조회
+    @GetMapping("/ranking")
+    public ResponseEntity<Map<String, Object>> ranking(Principal principal) {
+        User user = userService.loadUserByUsername(principal.getName());
+        return new ResponseEntity<>(mypageService.getRanking(user), HttpStatus.OK);
+    }
+
     /*
     //랭킹 조회
     @GetMapping("/ranking")

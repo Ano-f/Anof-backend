@@ -37,6 +37,9 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     private int point;
 
+    @Column
+    private Long ranking;
+
     @Column(length = 300)
     private String accessToken;
 

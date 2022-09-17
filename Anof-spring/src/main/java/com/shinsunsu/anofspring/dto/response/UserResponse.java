@@ -30,10 +30,18 @@ public class UserResponse {
         private Long ranking;
         private int point;
 
+        public rankingResponse(User user) {
+            this.nickname = user.getNickname();
+            this.ranking = user.getRanking();
+            this.point = user.getPoint();
+        }
+/*
         public rankingResponse(Long rank, String nickname, int point) {
             this.ranking = rank;
             this.nickname = nickname;
             this.point = point;
         }
+
+ */
     }
 }

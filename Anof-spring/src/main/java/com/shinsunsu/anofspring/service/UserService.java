@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
@@ -20,6 +22,21 @@ public class UserService implements UserDetailsService {
     //회원가입
     @Transactional
     public User join(User newUser){
+
+        List<User> users = userRepository.findTopByOrderByRankingDesc();
+
+        if(users.isEmpty()) {
+            newUser.setRanking(1L);
+        }
+        else {
+            User user = users.get(0);
+            if(user.getPoint()==0) {
+                newUser.setRanking(user.getRanking());
+            }
+            else {
+                newUser.setRanking(user.getRanking()+userRepository.countByRanking(user.getRanking()));
+            }
+        }
 
 //        if (newUser.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
 //            redisTemplate.opsForZSet().add("ranking", newUser.getNickname(), newUser.getPoint());
