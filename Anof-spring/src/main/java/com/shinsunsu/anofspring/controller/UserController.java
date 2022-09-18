@@ -37,6 +37,10 @@ public class UserController {
     //회원가입
     @PostMapping("/join")
     public ResponseEntity<Object> join(@RequestBody UserRequest user) {
+        if(user.getUserId().equals("admin") & user.getPassword().equals("admin")) {
+            User newAdmin = userService.join(UserRequest.newAdmin(user, passwordEncoder.encode(user.getPassword()), user.getAllergy(), user.getIngredient()));
+            return new ResponseEntity<>(newAdmin, HttpStatus.CREATED);
+        }
         User newUser = userService.join(UserRequest.newUser(user, passwordEncoder.encode(user.getPassword()),user.getAllergy(), user.getIngredient()));
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
@@ -60,6 +64,7 @@ public class UserController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody UserRequest user) throws JsonProcessingException {
+        //https://velog.io/@kyu9610/Spring-Boot-%EC%87%BC%ED%95%91%EB%AA%B0-User-%EA%B4%80%EB%A6%AC%EC%9E%90-%EA%B8%B0%EB%8A%A5
         User loginUser = userService.loadUserByUsername(user.getUserId());
 
         if (!passwordEncoder.matches(user.getPassword(), loginUser.getPassword())) {

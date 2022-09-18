@@ -30,4 +30,16 @@ public class UserRequest {
         return user;
     }
 
+    public static User newAdmin(UserRequest userRequest, String encodePW, Allergy allergy, Ingredient ingredient) {
+        User user = new User();
+        user.setAllergy(allergy);
+        user.setIngredient(ingredient);
+        user.setUserId(userRequest.getUserId());
+        user.setPassword(encodePW);
+        user.setNickname(userRequest.getNickname());
+        user.setRoles(Collections.singletonList("ROLE_ADMIN"));
+
+        return user;
+    }
+
 }
