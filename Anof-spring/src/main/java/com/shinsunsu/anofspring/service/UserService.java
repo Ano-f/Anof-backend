@@ -17,7 +17,6 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    //private final RedisTemplate redisTemplate;
 
     //회원가입
     @Transactional
@@ -37,11 +36,6 @@ public class UserService implements UserDetailsService {
                 newUser.setRanking(user.getRanking()+userRepository.countByRanking(user.getRanking()));
             }
         }
-
-//        if (newUser.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
-//            redisTemplate.opsForZSet().add("ranking", newUser.getNickname(), newUser.getPoint());
-//        }
-
         return userRepository.save(newUser);
     }
 
