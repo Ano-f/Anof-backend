@@ -1,4 +1,4 @@
-package com.shinsunsu.anofspring.domain;
+ package com.shinsunsu.anofspring.domain;
 
 import lombok.Getter;
 import lombok.Setter;
