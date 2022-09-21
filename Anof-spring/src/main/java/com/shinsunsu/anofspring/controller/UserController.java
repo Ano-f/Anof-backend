@@ -65,6 +65,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody UserRequest user) throws JsonProcessingException {
         //https://velog.io/@kyu9610/Spring-Boot-%EC%87%BC%ED%95%91%EB%AA%B0-User-%EA%B4%80%EB%A6%AC%EC%9E%90-%EA%B8%B0%EB%8A%A5
+
         User loginUser = userService.loadUserByUsername(user.getUserId());
 
         if (!passwordEncoder.matches(user.getPassword(), loginUser.getPassword())) {
@@ -81,6 +82,10 @@ public class UserController {
         map.put("userId",loginUser.getUserId());
         map.put("recommend", productService.recommend(loginUser.getUserId()));
         map.put("article", articleService.customArticle(loginUser.getUserId())); //맞춤 기사
+
+        if(user.getUserId().equals("admin") & user.getPassword().equals("admin")) {
+            map.put("status", "관리자");
+        }
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
