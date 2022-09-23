@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shinsunsu.anofspring.domain.Product;
 
+import com.shinsunsu.anofspring.domain.RegisterProduct;
 import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.FlaskDto;
 import com.shinsunsu.anofspring.dto.request.PointRequest;
@@ -85,45 +86,45 @@ public class ProductService {
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
         user.setPoint(user.getPoint() + 5);
 
-//        if(user.getRanking()!=1) {
-//            List<User> topUsers = userRepository.findByHighRanking(user.getRanking());
-//            User topUser = topUsers.get(0);
-//            if(user.getPoint()>topUser.getPoint()) {
-//                Long ranking = user.getRanking();
-//                user.setRanking(topUser.getRanking());
-//                for(User user1 : topUsers) {
-//                    user1.setRanking(ranking);
-//                }
-//            }
-//            else if (user.getPoint()==topUser.getPoint()) {
-//                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
-//                sameRankedUsers.remove(user);
-//                if(!sameRankedUsers.isEmpty()) {
-//                    for(User user1 : sameRankedUsers) {
-//                        user1.setRanking(user.getRanking()+1);
-//                    }
-//                }
-//                user.setRanking(topUser.getRanking());
-//            }
-//            else {
-//                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
-//                sameRankedUsers.remove(user);
-//                if(!sameRankedUsers.isEmpty()) {
-//                    for(User user1 : sameRankedUsers) {
-//                        user1.setRanking(user.getRanking()+1);
-//                    }
-//                }
-//            }
-//        }
-//        else {
-//            List<User> sameRankedUsers = userRepository.findByRanking(1L);
-//            sameRankedUsers.remove(user);
-//            if(!sameRankedUsers.isEmpty()) {
-//                for(User user1 : sameRankedUsers) {
-//                    user1.setRanking(user.getRanking()+1);
-//                }
-//            }
-//        }
+        if(user.getRanking()!=1) {
+            List<User> topUsers = userRepository.findByHighRanking(user.getRanking());
+            User topUser = topUsers.get(0);
+            if(user.getPoint()>topUser.getPoint()) {
+                Long ranking = user.getRanking();
+                user.setRanking(topUser.getRanking());
+                for(User user1 : topUsers) {
+                    user1.setRanking(ranking);
+                }
+            }
+            else if (user.getPoint()==topUser.getPoint()) {
+                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
+                sameRankedUsers.remove(user);
+                if(!sameRankedUsers.isEmpty()) {
+                    for(User user1 : sameRankedUsers) {
+                        user1.setRanking(user.getRanking()+1);
+                    }
+                }
+                user.setRanking(topUser.getRanking());
+            }
+            else {
+                List<User> sameRankedUsers = userRepository.findByRanking(user.getRanking());
+                sameRankedUsers.remove(user);
+                if(!sameRankedUsers.isEmpty()) {
+                    for(User user1 : sameRankedUsers) {
+                        user1.setRanking(user.getRanking()+1);
+                    }
+                }
+            }
+        }
+        else {
+            List<User> sameRankedUsers = userRepository.findByRanking(1L);
+            sameRankedUsers.remove(user);
+            if(!sameRankedUsers.isEmpty()) {
+                for(User user1 : sameRankedUsers) {
+                    user1.setRanking(user.getRanking()+1);
+                }
+            }
+        }
 /*
         if (user.getRoles() != Collections.singletonList("ROLE_ADMIN")) {
             redisTemplate.opsForZSet().add("ranking", user.getNickname(), user.getPoint());
@@ -131,6 +132,9 @@ public class ProductService {
 
  */
         pointDetailRepository.save(PointRequest.PointDetailRequest(user, product, 5));
+
+        RegisterProduct registerProduct = registerProductRepository.findByBarcode(request.getBarcode());
+        registerProduct.setEnable(0);
 
         return true;
     }

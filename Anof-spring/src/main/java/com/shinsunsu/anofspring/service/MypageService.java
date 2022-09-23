@@ -49,18 +49,28 @@ public class MypageService {
             }
         }
 
+        double totalCount = 0;
+
         //value 기준으로 공통 성분이 많이 count된 순으로 정렬
         List<String> listKeySet = new ArrayList<>(dangerIngredientCount.keySet());
         Collections.sort(listKeySet, (value1, value2) -> (dangerIngredientCount.get(value2).compareTo(dangerIngredientCount.get(value1))));
 
-        double totalCount = dangerIngredientCount.size();
+
         for(String key : listKeySet) {
+            System.out.println("key:"+key+"  value:"+dangerIngredientCount.get(key));
+            totalCount += dangerIngredientCount.get(key);
             if(dangerIngredientCount.get(key)<3) {
+                System.out.println("삭제전" +dangerIngredientCount.get(key));
                 dangerIngredientCount.remove(key);
-                continue;
+                System.out.println("삭제후" +dangerIngredientCount.keySet());
             }
+        }
+
+        for(String key : dangerIngredientCount.keySet()) {
+            System.out.println("key:"+key+"  value:"+dangerIngredientCount.get(key));
             dangerIngredientCount.replace(key, (int) (dangerIngredientCount.get(key)/totalCount*100));
         }
+
         return dangerIngredientCount;
 
     }

@@ -16,7 +16,7 @@ public class AdminService {
     private final RegisterProductRepository registerProductRepository;
 
     public List<RegisterRequestProductResponse> getRegisterRequestProductList() {
-        List<RegisterProduct> registerProducts = registerProductRepository.findAll();
+        List<RegisterProduct> registerProducts = registerProductRepository.findByEnable(1);
         List<RegisterRequestProductResponse> registList = new ArrayList<>();
 
         for(RegisterProduct registerProduct : registerProducts) {
