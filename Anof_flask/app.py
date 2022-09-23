@@ -11,9 +11,13 @@ app = Flask(__name__)
 def recommend():
     userId = request.get_json().get('userId')
    
-    user = pd.read_csv('./env/anofdata/user.csv') #./env/anofdata/알레르기 테이블.csv
-    allergy = pd.read_csv('./env/anofdata/userallergystate.csv')
-    ingredient = pd.read_csv('./env/anofdata/userIngredientstate.csv')
+    user = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/user.csv') #./env/anofdata/알레르기 테이블.csv
+    if(~(user['id']==userId).any()): #csv 파일에 해당 유저가 없는 경우
+        response = "0"
+        return response
+    
+    allergy = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/userallergystate.csv')
+    ingredient = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/userIngredientstate.csv')
     user = pd.merge(user, allergy, left_on='allergyId', right_on='id')
     user = pd.merge(user, ingredient, left_on='IngredientId', right_on='id')
     user.drop(['allergyId', 'IngredientId', 'id_y', 'id'], axis=1, inplace=True)
@@ -22,17 +26,19 @@ def recommend():
     corrMatrix_wo_std = pd.DataFrame(cosine_similarity(user), index=user.index, columns=user.index)
     corrMatrix_wo_std #로그인 사용자와 유사한 상태의 사용자들을 추출
 
-    #userId를 입력하면 가장 유사한 평점을 준 user들을 return
     def get_similarUsers(userId):
         similar_score = corrMatrix_wo_std[userId]
-        # 앞서 보정된 값을 가지고 평점의 내림차순으로 정렬
+        #앞서 보정된 값을 가지고 내림차순으로 정렬
         similar_score = similar_score.sort_values(ascending=False)[:5]
         similar_users = pd.DataFrame(similar_score)
-        similar_users.drop(similar_users[similar_users.index==userId], inplace=True)
+                
+        if (userId in similar_users.index):
+            similar_users.drop(similar_users[similar_users.index==userId], inplace=True)
+            
         return similar_users
 
     similar_users = get_similarUsers(userId).sort_values('id_x')
-    likeProduct = pd.read_csv('./env/anofdata/userlikeproduct.csv')
+    likeProduct = pd.read_csv('/ANoF/anof/Anof-backend/Anof_flask/env/anofdata/userlikeproduct.csv')
     likeProduct.drop(["id"], axis=1, inplace=True)
     
     def get_recommendProducts(likeProdcut):
@@ -61,12 +67,15 @@ def recommend():
             for row in range(matrix.shape[0]):
                 recommendation += matrix.iat[row, col]*similar_users.iat[row, 0]
             arr.append(recommendation)
-                
+              
         recommendProduct = pd.DataFrame(data=arr, index=matrix.columns, columns={'recommend'})
 
         recommendProduct = recommendProduct.sort_values(by='recommend', ascending=False)[:10]
                 
         recommendProduct.drop(recommendProduct[recommendProduct['recommend']==0].index, inplace=True)
+        
+        if (recommendProduct.empty):
+            return "0"
                 
         return ','.join(str(n) for n in recommendProduct.index.values.tolist())
         

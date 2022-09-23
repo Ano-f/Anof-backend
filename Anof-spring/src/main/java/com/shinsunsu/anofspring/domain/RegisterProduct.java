@@ -26,9 +26,6 @@ public class RegisterProduct {
     @Column(nullable = false, length = 5000)
     private String product_image;
 
-    @Column(nullable = false, length = 5000)
-    private String info_image;
-
     @Column(nullable = false, length = 100)
     private String barcode;
 

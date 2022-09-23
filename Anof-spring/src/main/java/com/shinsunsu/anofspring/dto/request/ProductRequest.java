@@ -17,7 +17,6 @@ public class ProductRequest {
         private String name;
         private String brand;
         private String product_image;
-        private String info_image;
         private String barcode;
         private int enable;
         private User user;
@@ -27,9 +26,8 @@ public class ProductRequest {
             registerProduct.setName(request.getName());
             registerProduct.setBrand(request.getBrand());
             registerProduct.setProduct_image(request.getProduct_image());
-            registerProduct.setInfo_image(request.getInfo_image());
             registerProduct.setBarcode(request.getBarcode());
-            registerProduct.setEnable(0);
+            registerProduct.setEnable(1);
             registerProduct.setUser(user);
             return registerProduct;
         }

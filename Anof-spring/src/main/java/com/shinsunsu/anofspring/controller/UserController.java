@@ -77,14 +77,18 @@ public class UserController {
         userService.updateToken(loginUser.getId(), token);
 
         Map<String, Object> map = new HashMap<>();
+
         map.put("token", token);
         map.put("nickname",loginUser.getNickname());
         map.put("userId",loginUser.getUserId());
-        map.put("recommend", productService.recommend(loginUser.getUserId()));
-        map.put("article", articleService.customArticle(loginUser.getUserId())); //맞춤 기사
 
         if(user.getUserId().equals("admin") & user.getPassword().equals("admin")) {
             map.put("status", "관리자");
+        }
+
+        else {
+            map.put("recommend", productService.recommend(loginUser.getUserId()));
+            map.put("article", articleService.customArticle(loginUser.getUserId())); //맞춤 기사
         }
 
         return new ResponseEntity<>(map, HttpStatus.OK);
