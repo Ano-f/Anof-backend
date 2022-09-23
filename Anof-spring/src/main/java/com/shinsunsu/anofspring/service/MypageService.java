@@ -38,6 +38,8 @@ public class MypageService {
             products.add(dislikeProduct.getProduct());
         }
 
+        double totalCount = dislikeProductList.size();
+
         Map<String, Integer> dangerIngredientCount = new HashMap<>();
         for(Product product : products) {
             List<Integer> productAllergy = new CustomAllergyResponse(product).CustomAllergy();
@@ -49,25 +51,14 @@ public class MypageService {
             }
         }
 
-        double totalCount = 0;
-
         //value 기준으로 공통 성분이 많이 count된 순으로 정렬
         List<String> listKeySet = new ArrayList<>(dangerIngredientCount.keySet());
         Collections.sort(listKeySet, (value1, value2) -> (dangerIngredientCount.get(value2).compareTo(dangerIngredientCount.get(value1))));
 
 
-        for(String key : listKeySet) {
-            System.out.println("key:"+key+"  value:"+dangerIngredientCount.get(key));
-            totalCount += dangerIngredientCount.get(key);
-            if(dangerIngredientCount.get(key)<3) {
-                System.out.println("삭제전" +dangerIngredientCount.get(key));
-                dangerIngredientCount.remove(key);
-                System.out.println("삭제후" +dangerIngredientCount.keySet());
-            }
-        }
+        for(String key : listKeySet) if(dangerIngredientCount.get(key)<3) dangerIngredientCount.remove(key);
 
         for(String key : dangerIngredientCount.keySet()) {
-            System.out.println("key:"+key+"  value:"+dangerIngredientCount.get(key));
             dangerIngredientCount.replace(key, (int) (dangerIngredientCount.get(key)/totalCount*100));
         }
 
