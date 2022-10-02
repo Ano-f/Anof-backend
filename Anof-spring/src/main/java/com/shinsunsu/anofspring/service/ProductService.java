@@ -133,8 +133,10 @@ public class ProductService {
  */
         pointDetailRepository.save(PointRequest.PointDetailRequest(user, product, 5));
 
-        RegisterProduct registerProduct = registerProductRepository.findByBarcode(request.getBarcode());
-        registerProduct.setEnable(0);
+        List<RegisterProduct> registerProductList = registerProductRepository.findByBarcode(request.getBarcode());
+        for (RegisterProduct registerProduct : registerProductList) {
+            registerProduct.setEnable(0);
+        }
 
         return true;
     }

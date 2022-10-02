@@ -10,5 +10,5 @@ import java.util.List;
 public interface RegisterProductRepository extends JpaRepository<RegisterProduct, Long> {
 
     List<RegisterProduct> findByEnable(int i);
-    RegisterProduct findByBarcode(String barcode);
+    List<RegisterProduct> findByBarcode(String barcode);
 }
