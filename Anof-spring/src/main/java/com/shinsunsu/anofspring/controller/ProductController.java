@@ -58,13 +58,4 @@ public class ProductController {
     public ResponseEntity<Boolean> addProduct(@RequestBody ProductRequest.addProductRequest request, Principal principal) {
         return new ResponseEntity<>(productService.addProduct(request), HttpStatus.OK);
     }
-
-    /*
-    //식품 추천
-    @PostMapping("/recommend")
-    public ResponseEntity<Object> recommend(Principal principal) throws JsonProcessingException {
-        return new ResponseEntity<>(productService.recommend(principal.getName()), HttpStatus.OK);
-    }
-     */
-
 }

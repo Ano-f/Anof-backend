@@ -27,6 +27,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u.id from User u where u.userId = :userId")
     Long findIdByUserId(@Param("userId") String userId);
 
+    //List<User> findTopByOrderByRankingDesc();
+    @Query(value = "SELECT * FROM User u order by Ranking DESC limit 1",nativeQuery = true)
     List<User> findTopByOrderByRankingDesc();
     int countByRanking(Long ranking);
     List<User> findTop50ByOrderByRanking();
