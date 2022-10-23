@@ -6,7 +6,6 @@ import com.shinsunsu.anofspring.domain.User;
 import com.shinsunsu.anofspring.dto.request.UserRequest;
 import com.shinsunsu.anofspring.exception.user.PasswordErrorException;
 import com.shinsunsu.anofspring.service.ArticleService;
-import com.shinsunsu.anofspring.service.MainpageService;
 import com.shinsunsu.anofspring.service.ProductService;
 import com.shinsunsu.anofspring.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +27,6 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ProductService productService;
-    @Autowired
-    private MainpageService mainpageService;
     private final ArticleService articleService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;

@@ -22,7 +22,6 @@ public class MypageService {
     private final PointDetailRepository pointDetailRepository;
     private final FAQRepository faqRepository;
     private final UserRepository userRepository;
-    //private final RedisTemplate redisTemplate;
 
     //위험 성분 분석
     @Transactional(readOnly = true)
@@ -139,41 +138,4 @@ public class MypageService {
 
         return map;
     }
-
-    /*
-    //랭킹
-    @Transactional(readOnly = true)
-    public Map<String, Object> getRanking(User user) {
-
-        Map<String, Object> map = new HashMap<>();
-
-        ZSetOperations<String, String> zSetOps = redisTemplate.opsForZSet();
-
-        Set<String> allRankReverseSet = zSetOps.reverseRange("ranking", 0, -1);
-        Iterator<String> allIter = allRankReverseSet.iterator();
-        List<UserResponse.rankingResponse> list = new ArrayList<>(50);
-
-        while(allIter.hasNext()) {
-            String nickname = allIter.next();
-            double point = zSetOps.score("ranking", nickname);
-            List samePointRank = zSetOps.reverseRangeByScore("ranking", point, point, 0, 1).stream().collect(Collectors.toList());
-            Long ranking = zSetOps.reverseRank("ranking", samePointRank.get(0));
-
-            int i = 0;
-            if (i<50) {
-                list.add(new UserResponse.rankingResponse(ranking+1, nickname, (int)point));
-                i++;
-            }
-
-            if(nickname.equals(user.getNickname())) {
-                map.put("user", new UserResponse.rankingResponse(ranking+1, nickname, (int)point));
-            }
-        }
-
-        map.put("ranking", list);
-
-        return map;
-    }
-
-     */
 }
