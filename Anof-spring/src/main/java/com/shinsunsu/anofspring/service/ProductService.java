@@ -214,7 +214,7 @@ public class ProductService {
         RestTemplate restTemplate = new RestTemplate();
 
         //http://52.79.134.110:5005/recommend
-        ResponseEntity<String> responseEntity = restTemplate.exchange("http://52.79.134.110:5005/recommend", HttpMethod.POST,
+        ResponseEntity<String> responseEntity = restTemplate.exchange("http://15.165.237.102:5005/recommend", HttpMethod.POST,
                 entity, String.class);
 
         String str = responseEntity.getBody();
